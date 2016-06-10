@@ -1,7 +1,7 @@
 source("./scripts/functions.R")
 
 
-files.ig<-list.files(path="./data/modules/txt", full.names=TRUE)
+files.ig<-list.files(path="../data/txt", full.names=TRUE)
 files.ig
 
 #####################################################################################################
