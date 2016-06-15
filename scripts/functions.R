@@ -16,3 +16,7 @@ aggregate.artquaval= function(v1,v2, v3, title1, title2, title3){
   out.df<-merge(out.df1,out.df2, by=title1)
   out.df
 }
+
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
