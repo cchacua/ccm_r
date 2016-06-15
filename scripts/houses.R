@@ -17,8 +17,9 @@ Ig_ml_vivienda<-read.delim(files.ig[24], header=TRUE, colClasses = "character")
 #viviendas.cali<-merge(gs_vivienda, Ig_ml_vivienda, by="VIVIENDA", suffixes = c(" ",".del"))
 viviendas.cali<-merge(gs_vivienda, Ig_ml_vivienda[, c("VIVIENDA", setdiff(colnames(Ig_ml_vivienda),colnames(gs_vivienda)))], by="VIVIENDA")
 rm(Ig_ml_vivienda, gs_vivienda)
-write.csv2(viviendas.cali,"../outputs/viviendas.cali.csv")
-write.csv(viviendas.cali,"../outputs/viviendas.cali.db.csv")
-?write.csv
-library(xlsx)
-write.xlsx(viviendas.cali,"../outputs/viviendas.cali.xlsx")
+#write.csv2(viviendas.cali,"../outputs/viviendas.cali.csv")
+#write.csv(viviendas.cali,"../outputs/viviendas.cali.db.csv")
+
+#?write.csv
+#library(xlsx)
+#write.xlsx(viviendas.cali,"../outputs/viviendas.cali.xlsx")
