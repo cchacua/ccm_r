@@ -20,14 +20,11 @@ Ig_gsdu_gas_dia<-read.delim(files.ig[8], header=TRUE, colClasses = "character")
 gsdu_gas_dia<-merge(viviendas.cali[,c(1,3)], Ig_gsdu_gas_dia, by="VIVIENDA")
 rm(Ig_gsdu_gas_dia)
 gsdu_gas_dia[gsdu_gas_dia== ""] <- NA
+View(gsdu_gas_dia)
 colnames(gsdu_gas_dia)
 
-valor.articulo<-data.frame(gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST,gsdu_gas_dia$GDU_ARTCLO)
-valor.articulo<-na.omit(valor.articulo)
-aggregate(as.numeric(as.character(valor.articulo$gsdu_gas_dia.GDU_VALOR_PGDO_ESTMDO_MES)), by=list(Category=valor.articulo$gsdu_gas_dia.GDU_ARTCLO), FUN=sum)
+gsdu_gas_dia.monthly.articles<-aggregate.artquaval(gsdu_gas_dia$GDU_ARTCLO, gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST,  "Product code", "Adjusted monthly quantity", "Adjusted monthly value")
 
-gsdu_gas_dia.articles<-aggregate(as.numeric(as.character(gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST)), by=list(Category=gsdu_gas_dia$GDU_ARTCLO), FUN=sum)
-item.01120202<-gsdu_gas_dia[gsdu_gas_dia$GDU_ARTCLO=="01110301",]
 
 #Daily food consumption by other people with income inside the household unit
 Ig_gsdp_gas_dia<-read.delim(files.ig[4], header=TRUE, colClasses = "character")
@@ -35,6 +32,15 @@ gsdp_gas_dia<-merge(viviendas.cali[,c(1,3)], Ig_gsdp_gas_dia, by="VIVIENDA")
 rm(Ig_gsdp_gas_dia)
 gsdp_gas_dia[gsdp_gas_dia== ""] <- NA
 colnames(gsdp_gas_dia)
+gsdp_gas_dia.monthly.articles<-aggregate.artquaval(gsdp_gas_dia$GDP_ARTCLO, gsdp_gas_dia$GDP_CNTDAD_ADQURDA_MES_AJST, gsdp_gas_dia$GDP_VALOR_PGDO_ESTMDO_MES_AJST, "Product code", "Adjusted monthly quantity", "Adjusted monthly value")
 
-#Extrapolated food expenses
+
+
+#Extrapolated food expenses of the household unit
 Ig_gsdu_gasto_alimentos_cap_c<-read.delim(files.ig[9], header=TRUE, colClasses = "character")
+gsdu_gasto_alimentos_cap_c<-merge(viviendas.cali[,c(1,3)], Ig_gsdu_gasto_alimentos_cap_c, by="VIVIENDA")
+rm(Ig_gsdu_gasto_alimentos_cap_c)
+gsdu_gasto_alimentos_cap_c.monthly.articles<-aggregate.artquaval(gsdu_gasto_alimentos_cap_c$ARTICULO, gsdu_gasto_alimentos_cap_c$CANTIDAD,gsdu_gasto_alimentos_cap_c$VALOR_MENSUAL_ALIMENTO,"Product code", "Adjusted monthly quantity", "Adjusted monthly value")
+
+
+#Extrapolated food expenses by other people with income inside the household unit
