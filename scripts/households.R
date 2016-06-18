@@ -23,11 +23,17 @@ rm(Ig_gsdu_gas_dia)
 gsdu_gas_dia[gsdu_gas_dia== ""] <- NA
 #View(gsdu_gas_dia)
 colnames(gsdu_gas_dia)
+gsdu_gas_dia$class<-substr(gsdu_gas_dia$GDU_ARTCLO, 1, 2)
+unique(gsdu_gas_dia$GDU_ARTCLO)
+cod.dos.du<-gsdu_gas_dia[gsdu_gas_dia$class=="02",]
+unique(cod.dos.du$GDU_ARTCLO)
 gsdu_gas_dia.monthly.articles<-aggregate.artquaval(gsdu_gas_dia$GDU_ARTCLO, gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST,  "Product code", "Adjusted monthly quantity", "Adjusted monthly value")
+
 
 #Daily food consumption by other people with income inside the household unit
 Ig_gsdp_gas_dia<-read.delim(files.ig[4], header=TRUE, colClasses = "character")
 gsdp_gas_dia<-merge(viviendas.cali[,c(1,3)], Ig_gsdp_gas_dia, by="VIVIENDA")
+unique(gsdp_gas_dia$GDP_ARTCLO)
 rm(Ig_gsdp_gas_dia)
 gsdp_gas_dia[gsdp_gas_dia== ""] <- NA
 colnames(gsdp_gas_dia)
@@ -36,6 +42,7 @@ gsdp_gas_dia.monthly.articles<-aggregate.artquaval(gsdp_gas_dia$GDP_ARTCLO, gsdp
 #Extrapolated food expenses of the household unit
 Ig_gsdu_gasto_alimentos_cap_c<-read.delim(files.ig[9], header=TRUE, colClasses = "character")
 gsdu_gasto_alimentos_cap_c<-merge(viviendas.cali[,c(1,3)], Ig_gsdu_gasto_alimentos_cap_c, by="VIVIENDA")
+unique(gsdu_gasto_alimentos_cap_c$ARTICULO)
 rm(Ig_gsdu_gasto_alimentos_cap_c)
 gsdu_gasto_alimentos_cap_c.monthly.articles<-aggregate.artquaval(gsdu_gasto_alimentos_cap_c$ARTICULO, gsdu_gasto_alimentos_cap_c$CANTIDAD,gsdu_gasto_alimentos_cap_c$VALOR_MENSUAL_ALIMENTO,"Product code", "Adjusted monthly quantity", "Adjusted monthly value")
 
