@@ -3,7 +3,7 @@
 #####################################################################################################
 
 #Income - expenses module
-Ig_gs_vivienda<-read.delim(files.ig[2], header=TRUE, colClasses = "character")
+Ig_gs_vivienda<-read.delim(modules[2], header=TRUE, colClasses = "character")
 #In the whole survey, there are 41.330 houses
 #table(Ig_gs_vivienda$DOMINIO)
 gs_vivienda<-Ig_gs_vivienda[Ig_gs_vivienda$DOMINIO=="CALI A.M.",]
@@ -11,7 +11,7 @@ gs_vivienda<-Ig_gs_vivienda[Ig_gs_vivienda$DOMINIO=="CALI A.M.",]
 rm(Ig_gs_vivienda)
 
 #Labor market module
-Ig_ml_vivienda<-read.delim(files.ig[24], header=TRUE, colClasses = "character")
+Ig_ml_vivienda<-read.delim(modules[24], header=TRUE, colClasses = "character")
 
 #A merge of both modules
 #viviendas.cali<-merge(gs_vivienda, Ig_ml_vivienda, by="VIVIENDA", suffixes = c(" ",".del"))
