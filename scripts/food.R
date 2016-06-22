@@ -33,7 +33,7 @@ Ig_gsdu_gasto_alimentos_cap_c<-read.delim(modules[9], header=TRUE, colClasses = 
 gsdu_gasto_alimentos_cap_c<-merge(viviendas.cali[,c(1,3)], Ig_gsdu_gasto_alimentos_cap_c, by="VIVIENDA")
 rm(Ig_gsdu_gasto_alimentos_cap_c)
 gsdu_gasto_alimentos_cap_c[gsdu_gasto_alimentos_cap_c== ""] <- NA
-View(gsdu_gasto_alimentos_cap_c)
+#View(gsdu_gasto_alimentos_cap_c)
 #unique(gsdu_gasto_alimentos_cap_c$ARTICULO)
 
 #####
@@ -75,6 +75,20 @@ rm(monthly.articles.list, gsdu_gas_dia.monthly.articles
 
 monthly.articles$class<-substr(monthly.articles$`Product code`, 1, 2)
 monthly.articles<-monthly.articles[monthly.articles$class=="01"  | monthly.articles$class=="02",]
+View(monthly.articles)
+monthly.articles.values<-monthly.articles[,c(1,3,6,8,9,10)]
+View(monthly.articles.values)
+colnames(monthly.articles.values)<-c("Product code", 
+                                    "Value for the household unit database", 
+                                    "Value for the other members receiving income data",
+                                    "Value for the extrapolated food expenses data",
+                                    "Value for the less frequent expenses in cash or credit",
+                                    "Value for the less frequent expenses in gift, barter, etc."
+                                                                    )
+monthly.articles.values$`Total monthly value`<-rowSums (monthly.articles.values[,2:6], na.rm = TRUE, dims = 1)
+
+#library(xlsx)
+#write.xlsx(monthly.articles.values,"../outputs/monthly.articles.values.xlsx")
 
 
- #Average expenses for household that adquires the good
+#Average expenses for household that adquires the good
