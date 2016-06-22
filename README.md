@@ -21,7 +21,7 @@ the other scripts and it put all the results in a new folder called "Output".
 
 
 # Contact
-If you have any question, suggestion, or if you want to contribute to this project, feel free to fork this repository and to comment.
+If you have any question, suggestion, or if you want to contribute to this project, feel free to fork this repo and to comment.
 In addition, you can send me a message to my email cchacua@gmail.com
 
 
