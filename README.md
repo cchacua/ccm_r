@@ -9,9 +9,7 @@ Income and Expenditure 2006- 2007 National Survey.
 # Where are the datasets?
 As the dataset files are so big, in this repository I have included only the processing R scripts that allow to extract and consult
 information from the original DANE's files. Therefore, in order to use this repository, you have to download the original DANE's 24 
-datamodules of the Income and Expenditure 2006- 2007 National Survey and put all the original .txt files in a new folder called "data", 
-outside this folder. Otherwise, you can select a new folder path for those files, by changing the route of the following line, 
-that is located in the scripts/main.R script:
+datamodules of the Income and Expenditure 2006- 2007 National Survey and put all the original .txt files in a new folder called "txt" inside another folder called "data", just outside this folder. Otherwise, you can select a new folder path for those files, by changing the route of the following line, that is located in the scripts/main.R script:
 
 modules<-list.files(path="../data/txt", full.names=TRUE)
 
