@@ -51,7 +51,7 @@ rm(Ig_gsmf_forma_adqui)
 gsmf_forma_adqui[gsmf_forma_adqui== ""] <- NA
 
 #############################################################################################
-#Aggregate consuption, quantities and units per article
+#Aggregate consumption, quantities and units per article
 #############################################################################################
 
 gsdu_gas_dia.monthly.articles<-aggregate.artquavalunit(gsdu_gas_dia$GDU_ARTCLO, gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST, gsdu_gas_dia$GDU_UDM_ESTANDAR,  "Product code", "Adjusted monthly quantity", "Adjusted monthly value", "Units")
