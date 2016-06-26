@@ -18,7 +18,7 @@ gsdu_gas_dia$class<-substr(gsdu_gas_dia$GDU_ARTCLO, 1, 2)
 #unique(cod.dos.du$GDU_ARTCLO)
 #View(gsdu_gas_dia)
 #colnames(gsdu_gas_dia)
-write.csv(gsdu_gas_dia,"../outputs/gsdu_gas_dia_Cali.csv")
+#write.csv(gsdu_gas_dia,"../outputs/gsdu_gas_dia_Cali.csv")
 
 
 #####
@@ -28,7 +28,7 @@ gsdp_gas_dia<-merge(viviendas.cali[,c(1,3)], Ig_gsdp_gas_dia, by="VIVIENDA")
 rm(Ig_gsdp_gas_dia)
 gsdp_gas_dia[gsdp_gas_dia== ""] <- NA
 #colnames(gsdp_gas_dia)
-write.csv(gsdp_gas_dia,"../outputs/gsdp_gas_dia_Cali.csv")
+#write.csv(gsdp_gas_dia,"../outputs/gsdp_gas_dia_Cali.csv")
 
 #####
 #Extrapolated food expenses of the household unit
@@ -38,7 +38,7 @@ rm(Ig_gsdu_gasto_alimentos_cap_c)
 gsdu_gasto_alimentos_cap_c[gsdu_gasto_alimentos_cap_c== ""] <- NA
 #View(gsdu_gasto_alimentos_cap_c)
 #unique(gsdu_gasto_alimentos_cap_c$ARTICULO)
-write.csv(gsdu_gasto_alimentos_cap_c,"../outputs/gsdu_gasto_alimentos_cap_c_Cali.csv")
+#write.csv(gsdu_gasto_alimentos_cap_c,"../outputs/gsdu_gasto_alimentos_cap_c_Cali.csv")
 
 #####
 # Food expenses that are not frequent
@@ -46,7 +46,7 @@ Ig_gsmf_compra<-read.delim(modules[11], header=TRUE, colClasses = "character")
 gsmf_compra<-merge(viviendas.cali[,c(1,3)], Ig_gsmf_compra, by="VIVIENDA")
 rm(Ig_gsmf_compra)
 gsmf_compra[gsmf_compra== ""] <- NA
-write.csv(gsmf_compra, "../outputs/gsmf_compra_Cali.csv")
+#write.csv(gsmf_compra, "../outputs/gsmf_compra_Cali.csv")
 
 #####
 # Non-monetary food expenses that are not frequent
@@ -54,7 +54,7 @@ Ig_gsmf_forma_adqui<-read.delim(modules[12], header=TRUE, colClasses = "characte
 gsmf_forma_adqui<-merge(viviendas.cali[,c(1,3)], Ig_gsmf_forma_adqui, by="VIVIENDA")
 rm(Ig_gsmf_forma_adqui)
 gsmf_forma_adqui[gsmf_forma_adqui== ""] <- NA
-write.csv(gsmf_forma_adqui, "../outputs/gsmf_forma_adqui_Cali.csv")
+#write.csv(gsmf_forma_adqui, "../outputs/gsmf_forma_adqui_Cali.csv")
 
 
 #############################################################################################
