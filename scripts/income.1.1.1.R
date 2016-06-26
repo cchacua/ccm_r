@@ -16,6 +16,8 @@ nrow(i.1.1.1.1)-nrow(na.omit(i.1.1.1.1))
   i.1.1.1.2$horasextras<-ifelse(i.1.1.1.2$P6510S2=="2", i.1.1.1.2$P6510S1, NA)
   #Sólo se colocan los ingresos por horas extras, si respondió que nó los había incluido
   i.1.1.1.2$val<-i.1.1.1.2$horasextras
+
+  
 # 1.1.1.3 Auxilios y subsidios laborales
 
 # 1.1.1.4 Gastos de representación
