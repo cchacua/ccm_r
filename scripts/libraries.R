@@ -4,3 +4,6 @@ devtools::install_github("jennybc/googlesheets")
 
 install.packages("plyr")
 library(plyr)
+
+install.packages("xlsx")
+library(xlsx)
