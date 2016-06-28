@@ -97,5 +97,31 @@ monthly.articles.values$`Total monthly value`<-rowSums (monthly.articles.values[
 #library(xlsx)
 #write.xlsx(monthly.articles.values,"../outputs/monthly.articles.values.xlsx")
 
+#############################################################################################
+#Big table houses vs clases
+#############################################################################################
+
+#Load classes names
+library(xlsx)
+subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
+
+#File with ENIG_CODE, articles, values and quantities
+gsdu_gas_dia.bigtable<-data.frame(gsdu_gas_dia$CODIGO_ENIG, gsdu_gas_dia$GDU_ARTCLO, gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST, gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , gsdu_gas_dia$GDU_UDM_ESTANDAR)
+colnames(gsdu_gas_dia.bigtable)<-c("ENIG_CODE", "Product code", "Adjusted monthly value", "Adjusted monthly quantity", "Units")
+
+gsdp_gas_dia.bigtable<-data.frame(gsdp_gas_dia$CODIGO_ENIG, gsdp_gas_dia$GDP_ARTCLO, gsdp_gas_dia$GDP_VALOR_PGDO_ESTMDO_MES_AJST, gsdp_gas_dia$GDP_CNTDAD_ADQURDA_MES_AJST)
+colnames(gsdp_gas_dia.bigtable)<-c("ENIG_CODE", "Product code", "Adjusted monthly value", "Adjusted monthly quantity")
+
+gsdu_gasto_alimentos_cap_c.bigtable<-data.frame(gsdu_gasto_alimentos_cap_c$, gsdu_gasto_alimentos_cap_c$ARTICULO, gsdu_gasto_alimentos_cap_c$CANTIDAD,gsdu_gasto_alimentos_cap_c$VALOR_MENSUAL_ALIMENTO,"Product code", "Adjusted monthly quantity", "Adjusted monthly value")
+
+gsmf_compra.monthly.bigtable<-data.frame(gsmf_compra$CODIGO_ENIG ,gsmf_compra$GMF_CMPRA_ARTCLO,gsmf_compra$GMF_CMPRA_VLR_PAGO_MES)
+colnames(gsmf_compra.monthly.bigtable)<-c("ENIG_CODE", "Product code", "Adjusted monthly value")
+View(gsmf_compra.monthly.bigtable)
+
+gsmf_forma_adqui.bigtable<-data.frame(gsmf_forma_adqui$CODIGO_ENIG, gsmf_forma_adqui$GMF_ADQU_ARTCLO,gsmf_forma_adqui$GMF_ADQU_VLR_PAGO_MES)
+colnames(gsmf_forma_adqui.bigtable)<-c("ENIG_CODE", "Product code", "Adjusted monthly value")
+
+
+
 
 #Average expenses for household that adquires the good

@@ -3,11 +3,11 @@
 ####
 
 # 1.1.1.1 Sueldos y salarios
-#Antes de descuentos ¿cuánto ganó ... el mes pasado en este empleo?
-i.1<-data.frame(P6500=ml_ocupado$P6500
+  #Antes de descuentos ¿cuánto ganó ... el mes pasado en este empleo?
+  i.1<-data.frame(P6500=ml_ocupado$P6500
                      )
-nrow(i.1) 
-nrow(i.1)-nrow(na.omit(i.1))  
+  nrow(i.1) 
+  nrow(i.1)-nrow(na.omit(i.1))  
   
 # 1.1.1.2 Horas extras
   i.2<-data.frame(P6510S1=as.numeric(ml_ocupado$P6510S1), P6510S2=ml_ocupado$P6510S2, CODIGO_ENIG=ml_ocupado$CODIGO_ENIG)
