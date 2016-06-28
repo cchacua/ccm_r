@@ -4,18 +4,18 @@
 
 # 1.1.1.1 Sueldos y salarios
 #Antes de descuentos ¿cuánto ganó ... el mes pasado en este empleo?
-i.1.1.1.1<-data.frame(P6500=ml_ocupado$P6500
+i.1<-data.frame(P6500=ml_ocupado$P6500
                      )
-nrow(i.1.1.1.1) 
-nrow(i.1.1.1.1)-nrow(na.omit(i.1.1.1.1))  
+nrow(i.1) 
+nrow(i.1)-nrow(na.omit(i.1))  
   
 # 1.1.1.2 Horas extras
-  i.1.1.1.2<-data.frame(P6510S1=as.numeric(ml_ocupado$P6510S1), P6510S2=ml_ocupado$P6510S2, CODIGO_ENIG=ml_ocupado$CODIGO_ENIG)
+  i.2<-data.frame(P6510S1=as.numeric(ml_ocupado$P6510S1), P6510S2=ml_ocupado$P6510S2, CODIGO_ENIG=ml_ocupado$CODIGO_ENIG)
   #El Mes Pasado Recibió Ingresos Por Concepto De Horas Extras? - ¿Cuánto Recibió? (P6510S1)                     
   #El Mes Pasado Recibió Ingresos Por Concepto De Horas Extras? - ¿Incluyó Este Valor En Los Ingresos Del Mes Pasado que me Declaró Anteriormente? (P6510S2) 1. Sí, 2. No
-  i.1.1.1.2$horasextras<-ifelse(i.1.1.1.2$P6510S2=="2", i.1.1.1.2$P6510S1, NA)
+  i.2$horasextras<-ifelse(i.2$P6510S2=="2", i.2$P6510S1, NA)
   #Sólo se colocan los ingresos por horas extras, si respondió que nó los había incluido
-  i.1.1.1.2$val<-i.1.1.1.2$horasextras
+  i.2$val<-i.2$horasextras
 
   
 # 1.1.1.3 Auxilios y subsidios laborales
