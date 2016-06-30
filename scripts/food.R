@@ -154,6 +154,8 @@ bigtable.out.houseandclass<-cast(bigtable.outone, HOUSEID ~ CLASSCODE + subclass
 #bigtable.out.houseandclass.colsums<-as.data.frame(colSums(bigtable.out.houseandclass))
 #View(bigtable.out.houseandclass.colsums)
 #bigtable.out.houseandclass.colsums
+bigtable.out.houseandclass.raw<-bigtable.out.houseandclass
+write.xlsx2(bigtable.out.houseandclass.raw,"../outputs/bigtable.out.houseandclass.raw.xlsx")
 
 myNumCols <- which(unlist(lapply(bigtable.out.houseandclass, is.numeric)))
 bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- colSums(bigtable.out.houseandclass[, myNumCols], na.rm=TRUE)

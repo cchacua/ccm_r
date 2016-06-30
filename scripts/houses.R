@@ -26,3 +26,14 @@ rm(Ig_ml_vivienda, gs_vivienda)
 #?write.csv
 #library(xlsx)
 #write.xlsx(viviendas.cali,"../outputs/viviendas.cali.xlsx")
+
+
+# Estrato
+# Nivel Educativo del jefe del hogar
+# Tipo de Vivienda P4000
+# La vivienda ocupada por este hogar es: (P5090)
+# P5240 Usted considera que los ingresos mensuales de su hogar:
+# P5230	¿Usted se considera pobre?	discrete	numeric	¿Usted se considera pobre? 1. Sí 2. No
+# Número de personas ocupadas en el hogar
+# Número de personas en edad de trabajar en el hogar
+# Número total de personas en el hogar
