@@ -28,3 +28,13 @@ table(articles.monthlyu$GDU_UDM_ESTANDAR)
 write.csv2(articles.monthlyu, "../outputs/articles.monthlyu.csv")
 #library(xlsx)
 write.xlsx(articles.monthlyu,"../outputs/articles.monthlyu.xlsx")
+
+
+#bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- 
+#sum(df$sex == 'M', na.rm=TRUE)
+
+#View(bigtable.out.houseandclass)
+#bigtable.out.houseandclass
+
+#sapply(bigtable.out.houseandclass, max)
+#Average expenses for household that adquires the good
