@@ -1,5 +1,5 @@
 #####################################################################################################
-#Household modules
+# Household modules
 #####################################################################################################
 
 #Income - expenses module
@@ -15,3 +15,14 @@ rm(Ig_ml_hogar)
 
 #hogares.cali<-merge(hogares.cali.ig,hogares.cali.ml, by="CODIGO_ENIG")
 #rm(hogares.cali)
+
+#####################################################################################################
+# Households: relevant variables
+#####################################################################################################
+
+  households<-as.data.frame()
+
+# Nivel Educativo del jefe del hogar
+# La vivienda ocupada por este hogar es: (P5090)
+# P5240 Usted considera que los ingresos mensuales de su hogar:
+# P5230	¿Usted se considera pobre?	discrete	numeric	¿Usted se considera pobre? 1. Sí 2. No

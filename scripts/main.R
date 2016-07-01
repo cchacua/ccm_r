@@ -12,5 +12,7 @@ m.preproc
 
 source("./scripts/houses.R")
 source("./scripts/households.R")
+source("./scripts/individuals.R")
 source("./scripts/food.R")
+source("./scripts/merge.people.households")
 source("./scripts/income.R")
