@@ -57,7 +57,7 @@ gsmf_forma_adqui[gsmf_forma_adqui== ""] <- NA
 #write.csv(gsmf_forma_adqui, "../outputs/gsmf_forma_adqui_Cali.csv")
 
 #############################################################################################
-#Big table houses vs clases
+#Big table households vs classes
 #############################################################################################
 library(datasets)
 library(dplyr)
@@ -67,6 +67,10 @@ library(reshape)
 #Load classes names
 subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
 
+#Load products names
+products.dane<-read.xlsx(m.labels[2], sheetName="products.dane",encoding="UTF-8")
+
+
 #File with ENIG_CODE, articles, values and quantities
 gsdu_gas_dia.bigtable<-data.frame(gsdu_gas_dia$CODIGO_ENIG, 
                                   gsdu_gas_dia$GDU_ARTCLO, 
@@ -75,7 +79,7 @@ gsdu_gas_dia.bigtable<-data.frame(gsdu_gas_dia$CODIGO_ENIG,
                                   gsdu_gas_dia$GDU_UDM_ESTANDAR)
 colnames(gsdu_gas_dia.bigtable)<-c("ENIG_CODE", "Product code", "Adjusted monthly value", "Adjusted monthly quantity", "Units")
 gsdu_gas_dia.bigtable.values<-summarise(group_by(gsdu_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-View(gsdu_gas_dia.bigtable.values)
+#View(gsdu_gas_dia.bigtable.values)
 
 
 gsdp_gas_dia.bigtable<-data.frame(gsdp_gas_dia$CODIGO_ENIG, 
@@ -127,7 +131,7 @@ bigtable.all$`Adjusted monthly value`<-as.numeric(as.character(bigtable.all$`Adj
 
 #Total expenses by product (incluiding all modules, without households' information)
 bigtable.all.values<-summarise(group_by(bigtable.all, `Product code`), sum(`Adjusted monthly value`, na.rm = TRUE))
-View(bigtable.all.values)
+#View(bigtable.all.values)
 
 
 #For building the dataset at the level of products (Until here any classification can be used for all the products)
@@ -146,6 +150,25 @@ bigtable.outone<-merge(bigtable.outone, subclass.dane, by.x="CLASSCODE", by.y="s
 #Total expenses by subclass (incluiding all modules, without households' information)
 #bigtable.outone.subclass<-summarise(group_by(bigtable.outone, CLASSCODE), sum(VALUE, na.rm = TRUE))
 #View(bigtable.outone.subclass)
+
+bigtable.outone.products<-merge(bigtable.outone, products.dane, by.x="PRODUCTCODE", by.y="products.code", all.x = TRUE)
+bigtable.outone.products<-bigtable.outone.products[,c("HOUSEID", 
+                                                      "CLASSCODE", 
+                                                      "subclass.name.sp",
+                                                      "subclass.name.eng",
+                                                      "subclass.longname.eng",
+                                                      "PRODUCTCODE",
+                                                      "products.name.es","VALUE")]
+
+colnames(bigtable.outone.products)<-c("HOUSEID", 
+                                      "Subclass code", 
+                                      "Subclass name (Spanish)",
+                                      "Subclass name (English)",
+                                      "Subclass description (English)",
+                                      "Product code",
+                                      "Product name (Spanish)","Total consumption value of the selected items")
+View(bigtable.outone.products)
+write.xlsx2(bigtable.outone.products,"../outputs/bigtable.outone.products.xlsx")
 
 #####
 # House and class table
@@ -167,9 +190,13 @@ bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Number of hous
 bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- sapply(bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass)-1):nrow(bigtable.out.houseandclass), myNumCols], function(x)(x[1]/x[2]))
 bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Average monthly consumption for the households that consumed the product"
 
-View(bigtable.out.houseandclass)
+#View(bigtable.out.houseandclass)
 #write.xlsx2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.xlsx")
 #write.csv2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.csv")
+
+bigtable.out.houseandclass.aggregated<-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) -2):nrow(bigtable.out.houseandclass),]
+#write.xlsx2(bigtable.out.houseandclass.aggregated,"../outputs/bigtable.out.houseandclass.aggregated.xlsx")
+#View(bigtable.out.houseandclass.aggregated)
 
 #############################################################################################
 #Big table with added modules
@@ -182,4 +209,4 @@ bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, 
 bigtable.out.houseandclass.addedmod[bigtable.out.houseandclass.addedmod== ""] <- NA
 write.xlsx2(bigtable.out.houseandclass.addedmod,"../outputs/bigtable.out.houseandclass.addedmod.xlsx")
 
-View(bigtable.out.houseandclass.addedmod)
+#View(bigtable.out.houseandclass.addedmod)

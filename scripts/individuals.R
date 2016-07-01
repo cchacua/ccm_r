@@ -131,8 +131,8 @@ library(reshape)
   individuals[individuals== ""] <- NA
   colnames(individuals)<-c("HOUSEID",
                            "According to the head of household culture, community or physical features, he/she is or can be identified as:",
-                           "Because of lack of money, the head of household did not consume any of the three BASIC OR MAIN MEAL (breakfast, lunch, dinner), one or more days during last week?",
-                           "What is the degree or diploma of higher education the head of household have received?",
+                           "Because of lack of money,  did not the head of household have breakfast, lunch or dinner, one or more days during last week?",
+                           "What is the degree or diploma of higher education the head of household has received?",
                            "Number of people inside the household",
                            "Number working age people inside each household",
                            "Number of employed people inside each household")

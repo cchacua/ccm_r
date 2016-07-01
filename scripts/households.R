@@ -90,6 +90,9 @@ rm(Ig_ml_hogar)
                                             "2" = "is sufficient to cover basic household expenses",
                                             "3" = "is not enough to cover basic household expenses")
   # P5250	¿Cuál considera que debería ser el ingreso mínimo mensual que requiere este hogar para satisfacer adecuadamente sus necesidades?
+  households$P5250<-as.numeric(as.character(households$P5250))
+  households$P5250[households$P5250== 98] <- NA
+  households$P5250[households$P5250== 99] <- NA
   # P5230	¿Usted se considera pobre?
   #households$P5230<-recode(households$P5230,"1"="Sí", "2"="No")
   households$P5230<-recode(households$P5230,"1"="Yes", "2"="No")
