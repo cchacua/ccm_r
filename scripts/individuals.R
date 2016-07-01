@@ -80,10 +80,60 @@ library(reshape)
   people<-merge(people, people.employed, by="HOUSEID")
   View(people)
   
+#####################################################################################################
+# Head of household database
+#####################################################################################################
   
+  ml_persona.headofhousehold<-ml_persona[ml_persona$P6050== "1",] 
+
+
 #####################################################################################################
 # People: relevant variables
 #####################################################################################################
   
+  individuals<-ml_persona.headofhousehold[,c("HOUSEID","P6080","P6060","P6220")]
+  individuals<-merge(individuals, people, by="HOUSEID")
+  # P6080	¿De acuerdo con su cultura, pueblo, o rasgos físicos, ... es o se reconoce como:
+    #   individuals$P6080<-recode(individuals$P6080,
+    #                             "1"= "Indígena"
+    #                             "2"= "Gitano - Rom",
+    #                             "3"= "Raizal del Archipiélago de San Andrés y Providencia?",
+    #                             "4"= "Palenquero de San Basilio o descendiente?",
+    #                             "5"= "Negro(a), mulato(a), afrocolombiano o afrodescendiente?",
+    #                             "6"= "Ninguno de los anteriores (mestizo, blanco, etc.)"
+    #                             )
+  individuals$P6080<-recode(individuals$P6080,
+                            "1" = "Indigenous",
+                            "2" = "Gipsy - Rom",
+                            "3" = "Raizal from the Archipelago of San Andres and Providencia?",
+                            "4" = "Palenquero from St. Basil or descendant of them?",
+                            "5" = "Black (a), Mulatto (a), Afro-Colombian or African descent?",
+                            "6" = "None of the above (white, mestizo, etc.)")
+  # P6060	¿Por FALTA de dinero, ... no consumió NINGUNA de las tres COMIDAS BASICAS O PRINCIPALES (desayuno, almuerzo, comida), uno o más días de la semana pasada?	
+  individuals$P6060<-recode(individuals$P6060,"1" = "Yes","2" = "No")
   
-  # Nivel Educativo del jefe del hogar
+  # P6220	¿Cuál es el título o diploma de mayor nivel educativo que usted ha recibido?
+    #   individuals$P6220<-recode(individuals$P6220,
+    #                             "1" ="Ninguno",
+    #                             "2"= "Bachiller",
+    #                             "3"= "Técnico o tecnológico",
+    #                             "4"= "Universitario",
+    #                             "5"= "Postgrado",
+    #                             "6"= "No sabe, no informa"
+    #                             )
+  individuals$P6220<-recode(individuals$P6220,
+                            "1" = "None",
+                            "2" = "High-school",
+                            "3" = "Technical or technological",
+                            "4" = "Bachellor's/Professional degree",
+                            "5" = "Posgraduate",
+                            "6" = "Do not know, do not report")
+  individuals[individuals== ""] <- NA
+  colnames(individuals)<-c("HOUSEID",
+                           "According to the head of household culture, community or physical features, he/she is or can be identified as:",
+                           "Because of lack of money, the head of household did not consume any of the three BASIC OR MAIN MEAL (breakfast, lunch, dinner), one or more days during last week?",
+                           "What is the degree or diploma of higher education the head of household have received?",
+                           "Number of people inside the household",
+                           "Number working age people inside each household",
+                           "Number of employed people inside each household")
+  

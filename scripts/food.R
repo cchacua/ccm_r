@@ -171,5 +171,15 @@ View(bigtable.out.houseandclass)
 #write.xlsx2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.xlsx")
 #write.csv2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.csv")
 
+#############################################################################################
+#Big table with added modules
+#############################################################################################
+bigtable.out.houseandclass.raw$VIVIENDA<-substr(bigtable.out.houseandclass.raw$HOUSEID, 1, 5)
 
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.raw, houses, by="VIVIENDA", all.x=TRUE)
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, households, by="HOUSEID")
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, individuals, by="HOUSEID",all.x=TRUE)
+bigtable.out.houseandclass.addedmod[bigtable.out.houseandclass.addedmod== ""] <- NA
+write.xlsx2(bigtable.out.houseandclass.addedmod,"../outputs/bigtable.out.houseandclass.addedmod.xlsx")
 
+View(bigtable.out.houseandclass.addedmod)
