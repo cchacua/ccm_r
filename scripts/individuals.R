@@ -80,7 +80,10 @@ library(reshape)
   people<-merge(people, people.employed, by="HOUSEID")
   View(people)
   
+  
 #####################################################################################################
-# People countings
+# People: relevant variables
 #####################################################################################################
   
+  
+  # Nivel Educativo del jefe del hogar
