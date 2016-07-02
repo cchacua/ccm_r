@@ -97,7 +97,7 @@ library(reshape)
   people<-merge(people, people.inactive, by="HOUSEID",  all=TRUE)
   people[is.na(people)]<-0
   #View(people)
-
+  rm(people.byhousehold, people.workingage, people.employed, people.unemployed, people.inactive)
 #####################################################################################################
 # Head of household database
 #####################################################################################################
@@ -110,7 +110,7 @@ library(reshape)
 #####################################################################################################
   
   individuals<-ml_persona.headofhousehold[,c("HOUSEID","P6080","P6060","P6220")]
-  individuals<-merge(individuals, people, by="HOUSEID")
+  individuals<-merge(individuals, people, by="HOUSEID", all=TRUE)
   # P6080	¿De acuerdo con su cultura, pueblo, o rasgos físicos, ... es o se reconoce como:
     #   individuals$P6080<-recode(individuals$P6080,
     #                             "1"= "Indígena"
@@ -146,6 +146,7 @@ library(reshape)
                             "4" = "Bachellor's/Professional degree",
                             "5" = "Posgraduate",
                             "6" = "Do not know, do not report")
+  individuals$P6220[is.na(individuals$P6220)]<-"Do not know, do not report"
   individuals[individuals== ""] <- NA
   colnames(individuals)<-c("HOUSEID",
                            "According to the head of household culture, community or physical features, he/she is or can be identified as:",
@@ -153,5 +154,8 @@ library(reshape)
                            "What is the degree or diploma of higher education the head of household has received?",
                            "Number of people inside the household",
                            "Number working age people inside each household",
-                           "Number of employed people inside each household")
+                           "Number of employed people inside each household",
+                           "Number of unemployed people inside each household",
+                           "Number of inactive people inside each household")
+  
   
