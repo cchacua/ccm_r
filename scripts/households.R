@@ -1,6 +1,10 @@
 #####################################################################################################
 # Household modules
 #####################################################################################################
+library(datasets)
+library(dplyr)
+library(xlsx)
+library(reshape)
 
 #Income - expenses module
 Ig_gs_hogar<-read.delim(modules[1], header=TRUE, colClasses = "character")
