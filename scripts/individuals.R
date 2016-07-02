@@ -153,7 +153,7 @@ library(reshape)
                            "Because of lack of money,  did not the head of household have breakfast, lunch or dinner, one or more days during last week?",
                            "What is the degree or diploma of higher education the head of household has received?",
                            "Number of people inside the household",
-                           "Number working age people inside each household",
+                           "Number of working age people inside each household",
                            "Number of employed people inside each household",
                            "Number of unemployed people inside each household",
                            "Number of inactive people inside each household")

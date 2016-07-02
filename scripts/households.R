@@ -24,19 +24,19 @@ rm(Ig_ml_hogar)
 # Households: relevant variables
 #####################################################################################################
 
-  households1<-hogares.cali.ig[,c("CODIGO_ENIG","GDU_GASTO_DSGRGDO_ALMNTO","GDU_GASTO_FSTA_ENCSTA", "GMF_NMRO_ORDEN_PRSNA")]
+  households1<-hogares.cali.ig[,c("CODIGO_ENIG","GDU_GASTO_DSGRGDO_ALMNTO","GDU_GASTO_FSTA_ENCSTA")]
   households2<-hogares.cali.ml[,c("CODIGO_ENIG", "P5000", "P5010", "P5070", "P5080","P5090","P5240","P5250","P5230")]
-  households<-merge(households1,households2, by="CODIGO_ENIG")
+  households<-merge(households1,households2, by="CODIGO_ENIG", all=TRUE)
   rm(households1, households2)
   households$HOUSEID<-substr(households$CODIGO_ENIG, 1, 7)
   # GDU_GASTO_DSGRGDO_ALMNTO	2 Urbano - ¿ Se logró obtener el gasto desagregado para todos los alimentos anteriores?
   households$GDU_GASTO_DSGRGDO_ALMNTO<-recode(households$GDU_GASTO_DSGRGDO_ALMNTO,"1"="Yes", "2"="No")
   # GDU_GASTO_FSTA_ENCSTA	2 Urbano - ¿ Durante los siete días en que se registró la información de este formulario ¿el hogar tuvo algún gasto en alimentos debido a fiestas, reuniones o invitados?
   households$GDU_GASTO_FSTA_ENCSTA<-recode(households$GDU_GASTO_FSTA_ENCSTA,"1"="Yes", "2"="No")
-  
-  # GMF_NMRO_ORDEN_PRSNA	3 - Número de orden de la persona que responde el formulario
   # P5000	Incluyendo sala-comedor ¿de cuántos cuartos en total dispone este hogar?
+  households$P5000<-as.numeric(as.character(households$P5000))
   # P5010	¿En cuántos de esos cuartos duermen las personas de este hogar?
+  households$P5010<-as.numeric(as.character(households$P5010))
   # P5070	¿En que sitio de la vivienda preparan los alimentos las personas de este hogar?
     #   households$P5070<-recode(households$P5070,
     #                                             "1"= "En un cuarto usado sólo para cocinar",
@@ -102,10 +102,9 @@ rm(Ig_ml_hogar)
   households$P5230<-recode(households$P5230,"1"="Yes", "2"="No")
   
   households[households== ""] <- NA
-  colnames(households)<-c("CODIGO_ENIG", 
-                          "Were disaggregated food expenses expenses recorded?",
+  households<-households[,2:ncol(households)]
+  colnames(households)<-c("Were disaggregated food expenses expenses recorded?",
                           "During the collection period, were there food expenditures associated to parties, meetings or similar?",
-                          "Identifier code of the person who answers the form, inside the household",
                           "Including living room, how many rooms does this household have?",
                           "How of those rooms are used to sleep by the household's members?",
                           "Where do household people prepare food?",
@@ -115,4 +114,10 @@ rm(Ig_ml_hogar)
                           "What do you think should be the minimum monthly income required by this household to adequately meet its needs?",
                           "Do you consider yourself poor?",
                           "HOUSEID")
+  
+  households.myNumCols<- which(unlist(lapply(households, is.numeric)))
+  households.myCharCols<- which(unlist(lapply(households, is.character)))
+  households[, households.myCharCols][is.na(households[, households.myCharCols])] <- "Not available"
+  #In numeric variables, NA values are replaced with 0
+  households[, households.myNumCols][is.na(households[, households.myNumCols])] <- 0
   

@@ -101,3 +101,7 @@ rm(Ig_ml_vivienda, gs_vivienda)
                       "Type of house", 
                       "What is the predominant material of the outer walls of the house?",
                       "What is the main material of the floors of the house?")
+  
+  houses.myCharCols<- which(unlist(lapply(houses, is.character)))
+  houses[, houses.myCharCols][is.na(houses[, houses.myCharCols])] <- "Not available"
+  

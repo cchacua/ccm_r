@@ -126,3 +126,9 @@ aggregate.artquavalunit= function(v1,v2, v3, v4, title1, title2, title3, titleun
   out.df<-merge(out.df,out.df3, by=title1)
   out.df
 }
+
+
+
+#For counting na
+length(na.omit(households[,12]))
+nrow(na.omit(households))
