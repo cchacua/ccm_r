@@ -41,6 +41,7 @@ library(reshape)
   #Information about unemployed population 
   Ig_ml_desocupado<-read.delim(modules[18], header=TRUE, colClasses = "character")
   ml_desocupado<-merge(viviendas.cali[,c(1,3)], Ig_ml_desocupado, by="VIVIENDA")
+  ml_desocupado$HOUSEID<-substr(ml_desocupado$CODIGO_ENIG , 1, 7)
   rm(Ig_ml_desocupado)
   #write.csv(ml_desocupado, "../outputs/ml_desocupado_Cali.csv")
   
@@ -48,6 +49,7 @@ library(reshape)
   #Information about inactive population
   Ig_ml_inactivo<-read.delim(modules[20], header=TRUE, colClasses = "character")
   ml_inactivo<-merge(viviendas.cali[,c(1,3)], Ig_ml_inactivo, by="VIVIENDA")
+  ml_inactivo$HOUSEID<-substr(ml_inactivo$CODIGO_ENIG , 1, 7)
   rm(Ig_ml_inactivo)
   #write.csv(ml_inactivo, "../outputs/ml_inactivo_Cali.csv")
 
@@ -74,11 +76,28 @@ library(reshape)
   colnames(people.employed)<-c("HOUSEID", "peopleemployed")
   
   #####
+  # Number of unemployed people inside each household
+  #####
+  people.unemployed<-count(ml_desocupado, HOUSEID)
+  colnames(people.unemployed)<-c("HOUSEID", "peopleunemployed")
+  
+  #####
+  # Number of inactive people inside each household
+  #####
+  people.inactive<-count(ml_inactivo, HOUSEID)
+  colnames(people.inactive)<-c("HOUSEID", "peopleinactive")  
+  
+  
+  #####
   # Dataframe number of people
   #####
-  people<-merge(people.byhousehold, people.workingage, by="HOUSEID")
-  people<-merge(people, people.employed, by="HOUSEID")
-  View(people)
+  people<-merge(people.byhousehold, people.workingage, by="HOUSEID", all=TRUE)
+  people<-merge(people, people.employed, by="HOUSEID",  all=TRUE)
+  people<-merge(people, people.unemployed, by="HOUSEID",  all=TRUE)
+  people<-merge(people, people.inactive, by="HOUSEID",  all=TRUE)
+  people[is.na(people)]<-0
+  #View(people)
+
   
 #####################################################################################################
 # Head of household database
