@@ -63,10 +63,16 @@ library(datasets)
 library(dplyr)
 library(xlsx)
 library(reshape)
+library(stringi)
+library(googlesheets)
 
 #Load classes names
-subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
-
+  #For the local file: subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
+  subclass.dane.key<-gs_key("11cq-icYs_BcpJ0yBBiRllN5KnkPJxdGky1PmhUYIvrA")
+  # A command/browser prompt will appear for giving access to the Google Spreadsheet
+  subclass.dane<-gs_read_csv(subclass.dane.key)
+  rm(subclass.dane.key<-gs_key)
+  
 #Load products names
 products.dane<-read.xlsx(m.labels[2], sheetName="products.dane",encoding="UTF-8")
 
@@ -151,6 +157,7 @@ bigtable.outone<-merge(bigtable.outone, subclass.dane, by.x="CLASSCODE", by.y="s
 #bigtable.outone.subclass<-summarise(group_by(bigtable.outone, CLASSCODE), sum(VALUE, na.rm = TRUE))
 #View(bigtable.outone.subclass)
 
+#For assigning labels from the products.name file to the products table
 bigtable.outone.products<-merge(bigtable.outone, products.dane, by.x="PRODUCTCODE", by.y="products.code", all.x = TRUE)
 bigtable.outone.products<-bigtable.outone.products[,c("HOUSEID", 
                                                       "CLASSCODE", 
@@ -167,36 +174,49 @@ colnames(bigtable.outone.products)<-c("HOUSEID",
                                       "Subclass description (English)",
                                       "Product code",
                                       "Product name (Spanish)","Total consumption value of the selected items")
-View(bigtable.outone.products)
+#View(bigtable.outone.products)
 write.xlsx2(bigtable.outone.products,"../outputs/bigtable.outone.products.xlsx")
 
 #####
 # House and class table
 bigtable.out.houseandclass<-cast(bigtable.outone, HOUSEID ~ CLASSCODE + subclass.name.eng , sum, value="VALUE")
-#View(bigtable.out.houseandclass)
-#bigtable.out.houseandclass.colsums<-as.data.frame(colSums(bigtable.out.houseandclass))
-#View(bigtable.out.houseandclass.colsums)
-#bigtable.out.houseandclass.colsums
 bigtable.out.houseandclass.raw<-bigtable.out.houseandclass
-write.xlsx2(bigtable.out.houseandclass.raw,"../outputs/bigtable.out.houseandclass.raw.xlsx")
+#write.xlsx2(bigtable.out.houseandclass.raw,"../outputs/bigtable.out.houseandclass.raw.xlsx")
 
-myNumCols <- which(unlist(lapply(bigtable.out.houseandclass, is.numeric)))
-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- colSums(bigtable.out.houseandclass[, myNumCols], na.rm=TRUE)
-bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Total monthly value of the class"
-#One row is deleted, because it corresponds to the row that contains the sums values
-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- sapply(bigtable.out.houseandclass[, myNumCols], function(x)(sum(x > 0, na.rm=TRUE))-1)
-bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Number of households that consume the product"
-#For estimating the average values of the households that consumed the product
-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- sapply(bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass)-1):nrow(bigtable.out.houseandclass), myNumCols], function(x)(x[1]/x[2]))
-bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Average monthly consumption for the households that consumed the product"
+# Aggregated table of consumption by class
+  bigtable.out.houseandclass.onlyclass<-cast(bigtable.outone, HOUSEID ~ CLASSCODE, sum, value="VALUE")
+  bigtable.out.houseandclass.onlyclass.tvalue<-as.data.frame(colSums(bigtable.out.houseandclass.onlyclass))
+  colnames(bigtable.out.houseandclass.onlyclass.tvalue)<-c("Total monthly consumption")
+  bigtable.out.houseandclass.onlyclass.tvalue<-merge(bigtable.out.houseandclass.onlyclass.tvalue, subclass.dane, by.x=0, by.y="subclass.code")
+  bigtable.out.houseandclass.onlyclass.myNumCols <- which(unlist(lapply(bigtable.out.houseandclass.onlyclass, is.numeric)))
+  bigtable.out.houseandclass.onlyclass.number<- as.data.frame(sapply(bigtable.out.houseandclass.onlyclass[, bigtable.out.houseandclass.onlyclass.myNumCols], function(x)(sum(x > 0, na.rm=TRUE))))
+  colnames(bigtable.out.houseandclass.onlyclass.number)<-c("Number of households that consume the product")
+  bigtable.out.conbyclass<-merge(bigtable.out.houseandclass.onlyclass.tvalue, bigtable.out.houseandclass.onlyclass.number, by.x="Row.names", by.y=0)
+  bigtable.out.conbyclass$`Average monthly consumption for the households that consumed the product`<-bigtable.out.conbyclass$`Total monthly consumption`/bigtable.out.conbyclass$`Number of households that consume the product`
+  bigtable.out.conbyclass.names<-colnames(bigtable.out.conbyclass)
+  bigtable.out.conbyclass.names[1]<-"Class code"
+  colnames(bigtable.out.conbyclass)<-bigtable.out.conbyclass.names
+  #View(bigtable.out.conbyclass)
+  write.xlsx2(bigtable.out.conbyclass,"../outputs/Consumption by class.xlsx")
+ 
+  #For including the sums, count and average as additionals rows
+    # #bigtable.out.houseandclass.colsums
+    # myNumCols <- which(unlist(lapply(bigtable.out.houseandclass, is.numeric)))
+    # bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- colSums(bigtable.out.houseandclass[, myNumCols], na.rm=TRUE)
+    # bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Total monthly value of the class"
+    # #One row is deleted, because it corresponds to the row that contains the sums values
+    # bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- sapply(bigtable.out.houseandclass[, myNumCols], function(x)(sum(x > 0, na.rm=TRUE))-1)
+    # bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Number of households that consume the product"
+    # #For estimating the average values of the households that consumed the product
+    # bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) + 1), myNumCols] <- sapply(bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass)-1):nrow(bigtable.out.houseandclass), myNumCols], function(x)(x[1]/x[2]))
+    # bigtable.out.houseandclass[nrow(bigtable.out.houseandclass), 1]<-"Average monthly consumption for the households that consumed the product"
+    #View(bigtable.out.houseandclass)
+    #write.xlsx2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.xlsx")
+    #write.csv2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.csv")
 
-#View(bigtable.out.houseandclass)
-#write.xlsx2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.xlsx")
-#write.csv2(bigtable.out.houseandclass,"../outputs/bigtable.out.houseandclass.csv")
-
-bigtable.out.houseandclass.aggregated<-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) -2):nrow(bigtable.out.houseandclass),]
-#write.xlsx2(bigtable.out.houseandclass.aggregated,"../outputs/bigtable.out.houseandclass.aggregated.xlsx")
-#View(bigtable.out.houseandclass.aggregated)
+    # bigtable.out.houseandclass.aggregated<-bigtable.out.houseandclass[(nrow(bigtable.out.houseandclass) -2):nrow(bigtable.out.houseandclass),]
+    # #write.xlsx2(bigtable.out.houseandclass.aggregated,"../outputs/bigtable.out.houseandclass.aggregated.xlsx")
+    # #View(bigtable.out.houseandclass.aggregated)
 
 #############################################################################################
 #Big table with added modules

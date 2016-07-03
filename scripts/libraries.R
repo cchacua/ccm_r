@@ -1,5 +1,9 @@
 devtools::install_github("hadley/xml2")
 devtools::install_github("jennybc/googlesheets")
+install.packages("stringi")
+install.packages("curl")
+library(googlesheets)
+library(stringi)
 
 
 #install.packages("plyr")
