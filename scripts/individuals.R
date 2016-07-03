@@ -98,6 +98,7 @@ library(reshape)
   people[is.na(people)]<-0
   #View(people)
   rm(people.byhousehold, people.workingage, people.employed, people.unemployed, people.inactive)
+
 #####################################################################################################
 # Head of household database
 #####################################################################################################

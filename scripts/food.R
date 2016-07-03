@@ -63,15 +63,15 @@ library(datasets)
 library(dplyr)
 library(xlsx)
 library(reshape)
-library(stringi)
-library(googlesheets)
+#library(stringi)
+#library(googlesheets)
 
 #Load classes names
-  #For the local file: subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
-  subclass.dane.key<-gs_key("11cq-icYs_BcpJ0yBBiRllN5KnkPJxdGky1PmhUYIvrA")
+  subclass.dane<-read.xlsx(m.labels[1], sheetName="subclass.dane",encoding="UTF-8")
+  #subclass.dane.key<-gs_key("11cq-icYs_BcpJ0yBBiRllN5KnkPJxdGky1PmhUYIvrA")
   # A command/browser prompt will appear for giving access to the Google Spreadsheet
-  subclass.dane<-gs_read_csv(subclass.dane.key)
-  rm(subclass.dane.key<-gs_key)
+  #subclass.dane<-gs_read_csv(subclass.dane.key)
+  #rm(subclass.dane.key<-gs_key)
   
 #Load products names
 products.dane<-read.xlsx(m.labels[2], sheetName="products.dane",encoding="UTF-8")
@@ -198,7 +198,7 @@ bigtable.out.houseandclass.raw<-bigtable.out.houseandclass
   colnames(bigtable.out.conbyclass)<-bigtable.out.conbyclass.names
   #View(bigtable.out.conbyclass)
   write.xlsx2(bigtable.out.conbyclass,"../outputs/Consumption by class.xlsx")
- 
+  rm(bigtable.out.houseandclass.onlyclass.tvalue, bigtable.out.houseandclass.onlyclass.myNumCols, bigtable.out.houseandclass.onlyclass.number, bigtable.out.conbyclass.names)
   #For including the sums, count and average as additionals rows
     # #bigtable.out.houseandclass.colsums
     # myNumCols <- which(unlist(lapply(bigtable.out.houseandclass, is.numeric)))
