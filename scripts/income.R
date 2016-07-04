@@ -65,5 +65,16 @@ library(dplyr)
 
 #############################################################################################
 
-
-
+ 
+ 
+#############################################################################################
+# 4. Estimating nominal monetary available income
+####
+ 
+ # 4.1 Estimating nominal monetary available personal income
+ source("./scripts/income.4.1.R")
+ 
+ # 4.2 Estimating nominal monetary available income of the expenditure unit
+ source("./scripts/income.4.2.R")
+ 
+ 
