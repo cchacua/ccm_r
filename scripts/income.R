@@ -33,18 +33,32 @@ source("./scripts/income.2.2.R")
 # 3. Occasional monetary income of the expenditure unit, when used
 ###
 
-# 3.1 Nominal Occasional monetary income of the people inside the expenditure unit that were used in the household expenses
+library(dplyr)
 
-# 3.2 Nominal non-monetary income of the expenditure unit
-
+  # 3.1 Nominal Occasional monetary income of the people inside the expenditure unit that were used in the household expenses
+      # P7514S1	¿Utilizó ... Durante Los Ultimos Doce Meses, Parte De Esos Ingresos Ocasionales En Los Gastos Del Hogar? - Valor ($) :
+      i3.1<-ml_persona[, c("CODIGO_ENIG", "HOUSEID")]
+      i3.1<-merge(i3.1, ml_pblcion_edad_trbjar[,c("P7514S1", "CODIGO_ENIG")], by="CODIGO_ENIG", all=TRUE)
+      i3.1$P7514S1<-as.numeric(as.character(i3.1$P7514S1))
+      i3.1[i3.1== 99] <- NA
+      i3.1[i3.1== 98] <- NA
+      #Dividing by 12 because of the DANE's suggestion
+        # Ya que para agregar la información los diferentes rubros deben referirse a un mismo período de tiempo, todos los ingresos 
+        # deben equivaler a ingresos mensuales y, por tanto, los ingresos captados con periodicidad anual se deben dividir entre doce 
+        # para que representen ingresos de un solo mes. 
+      i3.1$P7514S1<-i3.1$P7514S1/12
+  # 3.2 Nominal Occasional monetary  income of the expenditure unit
+      i3.2<-summarise(group_by(i3.1, HOUSEID), sum(`P7514S1`, na.rm = TRUE))
+      colnames(i3.2)<-c("HOUSEID", "Nominal Occasional monetary  income")
+  rm(i3.1)
 ##############
 
 ##############
 # Total income of the expenditure unit
 ###
 
- totalincome<- merge(i1, i2, by="HOUSEID")
- totalincome<- merge(totalincome, i3, by="HOUSEID")
+ totalincome<- merge(i1.2, i2.2, by="HOUSEID")
+ totalincome<- merge(totalincome, i3.2, by="HOUSEID")
  totalincome$total<-rowSums(totalincome[,2:4])
 
 ##############

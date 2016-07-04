@@ -229,4 +229,4 @@ bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, 
 bigtable.out.houseandclass.addedmod[bigtable.out.houseandclass.addedmod== ""] <- NA
 write.xlsx2(bigtable.out.houseandclass.addedmod,"../outputs/bigtable.out.houseandclass.addedmod.xlsx")
 
-#View(bigtable.out.houseandclass.addedmod)
+# View(bigtable.out.houseandclass.addedmod)
