@@ -31,3 +31,5 @@ library(dplyr)
   # Aggregate for the number of people
   i1.2<-add.nor.var.yearly.households(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P6200S1", output.df=i1.2)
 
+  i1.2$total<-rowSums(i1.2[,2:ncol(i1.2)], na.rm=TRUE)
+  

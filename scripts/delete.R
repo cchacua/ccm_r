@@ -157,3 +157,9 @@ i1.2.indiv.P6190S1<-summarise(group_by(i1.2.indiv, HOUSEID), sum(P6190S1, na.rm 
 i1.2.indiv<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P6200S1", output.df=i1.2.indiv)
 i1.2.indiv.P6200S1<-summarise(group_by(i1.2.indiv, HOUSEID), sum(P6200S1, na.rm = TRUE))
 rm(i1.2.indiv, i1.2.indiv.P6200S1, i1.2.indiv.P6190S1)
+
+
+# Algo que no va en los ingresos, pero que podría servir a futuro
+# P7080	¿Cuál fue el total de los ingresos recibidos o ganados por concepto de los trabajos que tuvo durante los últimos doce meses?
+#/12
+#i1.1<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P7080", output.df=i1.1)

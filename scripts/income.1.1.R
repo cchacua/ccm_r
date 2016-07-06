@@ -92,11 +92,6 @@
   # P7070	¿Cuánto recibio o ganó ... el mes pasado en ese segundo trabajo?
   i1.1<-add.nor.var(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P7070", output.df=i1.1)
   
-  
-  # P7080	¿Cuál fue el total de los ingresos recibidos o ganados por concepto de los trabajos que tuvo durante los últimos doce meses?
-  #/12
-  i1.1<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P7080", output.df=i1.1)
-  
 # 1.1.10 Ingresos de trabajo para desocupados 
   # P7422S1	¿Recibió o Ganó El Mes Pasado Ingresos Por Concepto De Trabajo? - ¿Cuánto?
   i1.1<-add.nor.var(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P7422S1", output.df=i1.1)

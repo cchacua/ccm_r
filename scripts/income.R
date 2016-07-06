@@ -57,7 +57,7 @@ library(dplyr)
 # Total income of the expenditure unit
 ###
 
- totalincome<- merge(i1.2, i2.2, by="HOUSEID")
+ totalincome<- merge(i1.2[,c("HOUSEID", "total")], i2.2, by="HOUSEID")
  totalincome<- merge(totalincome, i3.2, by="HOUSEID")
  totalincome$total<-rowSums(totalincome[,2:4])
 
