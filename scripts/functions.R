@@ -54,3 +54,19 @@ add.nor.var.nmes<-function(basedf, id.v, value.v, output.df, nmes){
   output.df<-merge(output.df, temp[,c(value.v,id.v )], by=id.v, all=TRUE) 
   return(output.df)
 }  
+
+
+add.nor.var.yearly.households<-function(basedf, id.v, value.v, output.df){
+  temp<-basedf[, c(id.v, value.v)]
+  temp<-as.data.frame(temp)
+  temp[,2]<-as.numeric(as.character(temp[,2]))
+  temp[,2]<-ifelse(temp[,2]==98, NA, temp[,2])
+  temp[,2]<-ifelse(temp[,2]==99, NA, temp[,2])
+  temp[,2]<-temp[,2]/12
+  colnames(temp)<-c(id.v, "value.name")
+  temp$HOUSEID<-substr(temp[,1], 1, 7)
+  output.temp<-summarise(group_by(temp, HOUSEID), sum(value.name, na.rm = TRUE))
+  colnames(output.temp)<-c("HOUSEID", value.v)
+  output.df<-merge(output.df, output.temp, by="HOUSEID", all=TRUE) 
+  return(output.df)
+}

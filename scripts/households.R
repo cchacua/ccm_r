@@ -14,6 +14,7 @@ rm(Ig_gs_hogar)
 #Labor market module
 Ig_ml_hogar<-read.delim(modules[19], header=TRUE, colClasses = "character")
 hogares.cali.ml<-merge(viviendas.cali[,c(1,3)], Ig_ml_hogar, by="VIVIENDA")
+hogares.cali.ml$HOUSEID<-substr(households$CODIGO_ENIG, 1, 7)
 #nrow(unique(data.frame(hogares.cali.ml$VIVIENDA,hogares.cali.ml$FACTOR_EXPANSION_EC_E1)))
 rm(Ig_ml_hogar)
 

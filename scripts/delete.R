@@ -147,3 +147,13 @@ rm(t.2)
 
 #Para crear un df con carácterés
 i1.1$total<- as.data.frame(sapply(i1.1[, 3:ncol(i1.1)], function(x) (as.numeric(as.character(x)))))
+
+#Para agregar por hogares
+i1.2.indiv<-allindividuals[, c("CODIGO_ENIG", "HOUSEID")]
+i1.2.indiv<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P6190S1", output.df=i1.2.indiv)
+i1.2.indiv.P6190S1<-summarise(group_by(i1.2.indiv, HOUSEID), sum(P6190S1, na.rm = TRUE))
+
+
+i1.2.indiv<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P6200S1", output.df=i1.2.indiv)
+i1.2.indiv.P6200S1<-summarise(group_by(i1.2.indiv, HOUSEID), sum(P6200S1, na.rm = TRUE))
+rm(i1.2.indiv, i1.2.indiv.P6200S1, i1.2.indiv.P6190S1)
