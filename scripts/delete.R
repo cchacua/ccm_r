@@ -132,3 +132,18 @@ aggregate.artquavalunit= function(v1,v2, v3, v4, title1, title2, title3, titleun
 #For counting na
 length(na.omit(households[,12]))
 nrow(na.omit(houses))
+
+
+#Código viejo horas extras
+
+t.2<-allindividuals[, c("CODIGO_ENIG", "P6510S1", "P6510S2")]
+t.2$horasextras<-ifelse(t.2$P6510S2=="2", t.2$P6510S1, NA)
+sum(as.numeric(as.character(t.2$horasextras)), na.rm=TRUE)
+t2.1<-as.data.frame(table(t.2$horasextras))
+sum(t2.1$Freq)
+i1.1<-merge(i1.1, t.2[,c("horasextras", "CODIGO_ENIG")], by="CODIGO_ENIG", all=TRUE) 
+rm(t.2)
+
+
+#Para crear un df con carácterés
+i1.1$total<- as.data.frame(sapply(i1.1[, 3:ncol(i1.1)], function(x) (as.numeric(as.character(x)))))

@@ -159,4 +159,13 @@ library(reshape)
                            "Number of unemployed people inside each household",
                            "Number of inactive people inside each household")
   
+#####################################################################################################
+# People: all variables
+#####################################################################################################
+  
+  allindividuals<-merge.setdiff(ml_persona, ml_pblcion_edad_trbjar)
+  allindividuals<-merge.setdiff(allindividuals, ml_ocupado)
+  allindividuals<-merge.setdiff(allindividuals, ml_desocupado)
+  allindividuals<-merge.setdiff(allindividuals, ml_inactivo)
+  
   
