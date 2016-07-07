@@ -1,6 +1,7 @@
 #############################################################################################
 # Estimating total income of the expenditure unit
 ####
+library(Hmisc)
 
 ##############
 # 1. Nominal monetary income of the expenditure unit
@@ -49,7 +50,7 @@ library(dplyr)
       i3.1$P7514S1<-i3.1$P7514S1/12
   # 3.2 Nominal Occasional monetary  income of the expenditure unit
       i3.2<-summarise(group_by(i3.1, HOUSEID), sum(`P7514S1`, na.rm = TRUE))
-      colnames(i3.2)<-c("HOUSEID", "Nominal Occasional monetary  income")
+      colnames(i3.2)<-c("HOUSEID", "Nominal Occasional monetary income")
   rm(i3.1)
 ##############
 
@@ -57,12 +58,25 @@ library(dplyr)
 # Total income of the expenditure unit
 ###
 
- totalincome<- merge(i1.2[,c("HOUSEID", "total")], i2.2, by="HOUSEID")
- totalincome<- merge(totalincome, i3.2, by="HOUSEID")
+ totalincome<- merge(i1.2[,c("HOUSEID", "total")], i2.2[,c("HOUSEID", "total")], by="HOUSEID", all=TRUE)
+ totalincome<- merge(totalincome, i3.2, by="HOUSEID", all=TRUE)
  totalincome$total<-rowSums(totalincome[,2:4])
-
+ colnames(totalincome)<-c("HOUSEID", "Nominal monetary income", "Nominal non-monetary income", "Nominal Occasional monetary income", "Total income" )
+ totalincome$`Empirical Cumulative Distribution`<-ecdf(totalincome$`Total income`)(totalincome$`Total income`)
+ totalincome$`Quintile`<-cut2(totalincome$`Total income`, g=5)
+ totalincome$`Quintile number`<-as.numeric(totalincome$`Quintile`)
+#  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
+#  quantile(totalincome$`Total income`, probs = seq(0, 1, by= 0.1))
+#  quantile(totalincome$`Total income`, prob = seq(0, 1, length = 11), type = 5)
+#  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
+ 
+ View(totalincome)
+ 
+ write.xlsx2(totalincome,"../outputs/totalincome.xlsx")
+ 
 ##############
 
+ 
 #############################################################################################
 
  

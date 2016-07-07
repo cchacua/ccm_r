@@ -32,3 +32,8 @@
   i2.2<-add.nor.var.yearly(basedf=hogares.cali.ml, id.v="HOUSEID", value.v="P5190S2A1", output.df=i2.2)
   
 # 2.2.7	Valor estimado de bienes y servicios adquiridos por el hogar por autoconsumo, autosuministro y pago en especie 
+  i2.2<-add.nor.var.households(basedf=gsmf_forma_adqui, id.v="CODIGO_ENIG", value.v="GMF_ADQU_VLR_PAGO_MES", output.df=i2.2)
+
+# TOTAL  
+  i2.2$total<-rowSums(i2.2[,2:ncol(i2.2)], na.rm=TRUE)
+  
