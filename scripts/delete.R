@@ -332,3 +332,22 @@ colnames(bigtable.outone.products)<-c("HOUSEID",
 #View(bigtable.outone.products)
 write.xlsx2(bigtable.outone.products,"../outputs/bigtable.outone.products.xlsx")
 
+
+#############################################################################################
+#Big table with added modules
+#############################################################################################
+bigtable.out.houseandclass.raw$VIVIENDA<-substr(bigtable.out.houseandclass.raw$HOUSEID, 1, 5)
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.raw, houses, by="VIVIENDA", all.x=TRUE)
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, households, by="HOUSEID")
+bigtable.out.houseandclass.addedmod<-merge(bigtable.out.houseandclass.addedmod, individuals, by="HOUSEID",all.x=TRUE)
+bigtable.out.houseandclass.addedmod[bigtable.out.houseandclass.addedmod== ""] <- NA
+
+bigtable.out.houseandclass<-cast(bigtable.outone.wclass, HOUSEID ~ CLASSCODE + subclass.name.eng , sum, value="VALUE")
+bigtable.out.houseandclass.raw<-bigtable.out.houseandclass
+#write.xlsx2(bigtable.out.houseandclass.raw,"../outputs/bigtable.out.houseandclass.raw.xlsx")
+
+houseandclass.addedmod<-add.rlvnt.houshld.inf(table.df=bigtable.out.houseandclass.raw, 
+                                              houseid.v=bigtable.out.houseandclass.raw$HOUSEID, 
+                                              houses.df=houses, 
+                                              households.df=households, 
+                                              individuals.df=individuals)

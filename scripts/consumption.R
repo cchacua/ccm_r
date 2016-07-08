@@ -193,7 +193,6 @@ gsmf_forma_adqui$GMF_ADQU_FORMA<-recode(gsmf_forma_adqui$GMF_ADQU_FORMA,
     gsdu_gas_dia.bigtable.values<-summarise(group_by(gsdu_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
     #View(gsdu_gas_dia.bigtable.values)
     
-    
     gsdp_gas_dia.bigtable<-data.frame(gsdp_gas_dia$CODIGO_ENIG, 
                                       gsdp_gas_dia$GDP_ARTCLO, 
                                       gsdp_gas_dia$GDP_VALOR_PGDO_ESTMDO_MES_AJST,
@@ -273,7 +272,7 @@ gsmf_forma_adqui$GMF_ADQU_FORMA<-recode(gsmf_forma_adqui$GMF_ADQU_FORMA,
 
 
 #
-bigtable.all.housevalues<-summarise(group_by(bigtable.all, HOUSEID), sum(`Adjusted monthly value`, na.rm = TRUE))
+#bigtable.all.housevalues<-summarise(group_by(bigtable.all, HOUSEID), sum(`Adjusted monthly value`, na.rm = TRUE))
 
 
 

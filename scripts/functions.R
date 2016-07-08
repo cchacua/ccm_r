@@ -142,6 +142,50 @@ agg.consu.sum<-function(df.src, levelcode.labels, levelcode.labels.by, saveto=".
     ptable.conbylevel<-ptable.conbylevel[,c(1,3:ncol(ptable.conbylevel))]
     write.xlsx2(ptable.conbylevel, saveto)
     return(ptable.conbylevel)
-    
 }
-    
+
+add.rlvnt.houshld.inf<-function(table.df, houseid.v, houses.df, households.df, individuals.df){
+  print("All modules should contain the VIVIENDA and HOUSEID variables")
+  table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  table.df$VIVIENDA<-substr(houseid.v, 1, 5)
+  o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  o<-merge(o, households.df, by="HOUSEID")
+  o<-merge(o, individuals.df, by="HOUSEID",all.x=TRUE)
+  o[o== ""] <- NA
+  return(o)
+}
+
+
+bigtable.full<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  #print(colnames(table.df))
+  table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  table.df$VIVIENDA<-substr(table.df$id.v, 1, 5)
+  o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  o<-merge(o, households.df, by.x="id.v", by.y="HOUSEID", all.x=TRUE)
+  o<-merge(o, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  o[o== ""] <- NA
+  return(o)
+} 
+
+bigtable.full.individuals<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  #print(colnames(table.df))
+  table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  myNumCols <- which(unlist(lapply(table.df, is.numeric)))
+  numberofindi<-merge(table.df, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  table.df$vector<-numberofindi$`Number of people inside the household`
+  table.df[, myNumCols]<-sweep(table.df[, myNumCols],1,table.df$vector,`/`)
+    #sapply(table.df[, myNumCols], function(x)(x/2))
+  table.df$VIVIENDA<-substr(table.df$id.v, 1, 5)
+  o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  o<-merge(o, households.df, by.x="id.v", by.y="HOUSEID", all.x=TRUE)
+  o<-merge(o, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  o[o== ""] <- NA
+  return(o)
+} 
+
