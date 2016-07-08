@@ -79,14 +79,15 @@
   # P6760	¿A cuántos meses corresponde lo que recibió?
   # //P6760
   i1.1<-add.nor.var.nmes(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P6750", output.df=i1.1, nmes="P6760")
+  #View(allindividuals[,c("CODIGO_ENIG","P6750","P6760")])
   
-  
+
+# 1.1.8 Ganancia Neta-Ingreso empleo independiente áreas rurales, para hogares en clases 2 y 3.  Para este caso, se toma el mayor valor entre el mes pasado y los últimos doce meses. 
+  # For Cali, there is not information about its rural areas.
   # P550	¿Cuál fue la ganancia neta del negocio o de la cosecha durante los últimos 12 meses?
   # /12
   i1.1<-add.nor.var.yearly(basedf=allindividuals, id.v="CODIGO_ENIG", value.v="P550", output.df=i1.1)
   
-# 1.1.8 Ganancia Neta-Ingreso empleo independiente áreas rurales, para hogares en clases 2 y 3.  Para este caso, se toma el mayor valor entre el mes pasado y los últimos doce meses. 
-  # For Cali, there is not information about its rural areas.
   
 # 1.1.9 Ingreso por segundo trabajo
   # P7070	¿Cuánto recibio o ganó ... el mes pasado en ese segundo trabajo?

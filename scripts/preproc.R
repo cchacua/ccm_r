@@ -8,7 +8,7 @@ m.preproc
 hogares.preproc<-read.csv(m.preproc[1], header=TRUE, colClasses = "character")
 hogares.cali.preproc<-merge(viviendas.cali[,c(1,3)], hogares.preproc, by="VIVIENDA")
 rm(hogares.preproc)
-#View(hogares.cali.preproc)
+View(hogares.cali.preproc)
 #hogares.cali.preproc
 
 hogares.cali.preproc.new<-hogares.cali.preproc[,c("Iden_hog","ICMUG")]

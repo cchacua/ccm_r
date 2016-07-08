@@ -16,7 +16,7 @@ rm(Ig_gs_vivienda)
 
 #Labor market module
 Ig_ml_vivienda<-read.delim(modules[24], header=TRUE, colClasses = "character")
-
+#View(Ig_ml_vivienda)
 #A merge of both modules
 #viviendas.cali<-merge(gs_vivienda, Ig_ml_vivienda, by="VIVIENDA", suffixes = c(" ",".del"))
 viviendas.cali<-merge(gs_vivienda, Ig_ml_vivienda[, c("VIVIENDA", setdiff(colnames(Ig_ml_vivienda),colnames(gs_vivienda)))], by="VIVIENDA")

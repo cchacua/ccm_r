@@ -121,5 +121,27 @@ add.nor.var.ali.mes.households<-function(basedf, id.v, value.v, valuepag.v, outp
   colnames(output.temp)<-c("HOUSEID", name.v)
   output.df<-merge(output.df, output.temp, by="HOUSEID", all=TRUE) 
   return(output.df)
-  
 }
+
+
+agg.consu.sum<-function(df.src, levelcode.labels, levelcode.labels.by, saveto="../outputs/name.xlsx"){
+  #df.src=data.frame(id.v, levelcode.v, value.v)  
+  ptable<-cast(df.src, id.v ~ levelcode.v, sum, value="value.v")
+    
+    # Sums of values 
+    ptable.tvalue<-as.data.frame(colSums(ptable))
+    # Times where value>0 in each column
+    ptable.myNumCols <- which(unlist(lapply(ptable, is.numeric)))
+    ptable.number<- as.data.frame(sapply(ptable[, ptable.myNumCols], function(x)(sum(x > 0, na.rm=TRUE))))
+    ptable.conbylevel<-merge(ptable.tvalue, ptable.number, by.x=0, by.y=0, all=TRUE)
+    ptable.conbylevel$AVERAGE<-ptable.conbylevel[,2]/ptable.conbylevel[,3]
+    colnames(ptable.conbylevel)<-c("Code", "Total consumption", "Numer of consumer households", "Average consumption")
+    # Labels for the levelcode variable
+    ptable.conbylevel1<-merge(ptable.conbylevel[,1:2], levelcode.labels, by.x=1, by.y=levelcode.labels.by, all.x=TRUE)
+    ptable.conbylevel<-merge(ptable.conbylevel1, ptable.conbylevel, by="Code", all=TRUE)
+    ptable.conbylevel<-ptable.conbylevel[,c(1,3:ncol(ptable.conbylevel))]
+    write.xlsx2(ptable.conbylevel, saveto)
+    return(ptable.conbylevel)
+    
+}
+    

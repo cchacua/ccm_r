@@ -170,106 +170,113 @@ gsmf_forma_adqui$GMF_ADQU_FORMA<-recode(gsmf_forma_adqui$GMF_ADQU_FORMA,
                                         '4'='Tomado de un negocio propio',
                                         '8'='Otra forma')
 
-#####
-#File with ENIG_CODE, articles, values and quantities
-gsdu_gas_dia.bigtable<-data.frame(gsdu_gas_dia$CODIGO_ENIG, 
-                                  gsdu_gas_dia$GDU_ARTCLO, 
-                                  gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST,
-                                  gsdu_gas_dia$GDU_LUGAR_CMPRA,
-                                  gsdu_gas_dia$GDU_FORMA_ADQSCION,
-                                  gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , 
-                                  gsdu_gas_dia$GDU_UDM_ESTANDAR)
-colnames(gsdu_gas_dia.bigtable)<-c("ENIG_CODE", 
-                                   "Product code", 
-                                   "Adjusted monthly value", 
-                                   "Place of purchase", 
-                                   "Way of purchase", 
-                                   "Adjusted monthly quantity", 
-                                   "Units")
-gsdu_gas_dia.bigtable.values<-summarise(group_by(gsdu_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-#View(gsdu_gas_dia.bigtable.values)
+#############################################################################################
 
-
-gsdp_gas_dia.bigtable<-data.frame(gsdp_gas_dia$CODIGO_ENIG, 
-                                  gsdp_gas_dia$GDP_ARTCLO, 
-                                  gsdp_gas_dia$GDP_VALOR_PGDO_ESTMDO_MES_AJST,
-                                  gsdp_gas_dia$GDP_LUGAR_CMPRA,
-                                  gsdp_gas_dia$GDP_FORMA_ADQSCION,
-                                  gsdp_gas_dia$GDP_CNTDAD_ADQURDA_MES_AJST)
-colnames(gsdp_gas_dia.bigtable)<-c("ENIG_CODE", 
-                                   "Product code", 
-                                   "Adjusted monthly value", 
-                                   "Place of purchase", 
-                                   "Way of purchase",
-                                   "Adjusted monthly quantity")
-#gsdp_gas_dia.bigtable.values<-summarise(group_by(gsdp_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-#View(gsdp_gas_dia.bigtable.values)
-
-
-gsdu_gasto_alimentos_cap_c.bigtable<-data.frame(paste(gsdu_gasto_alimentos_cap_c$VIVIENDA,gsdu_gasto_alimentos_cap_c$HOGAR, sep=""), 
-                                                gsdu_gasto_alimentos_cap_c$ARTICULO,
-                                                gsdu_gasto_alimentos_cap_c$VALOR_MENSUAL_ALIMENTO,
-                                                gsdu_gasto_alimentos_cap_c$CANTIDAD)
-colnames(gsdu_gasto_alimentos_cap_c.bigtable)<-c("ENIG_CODE", 
-                                                 "Product code", 
-                                                 "Adjusted monthly value",
-                                                 "Adjusted monthly quantity")
-#View(gsdu_gasto_alimentos_cap_c.bigtable)
-#gsdu_gasto_alimentos_cap_c.bigtable.values<-summarise(group_by(gsdu_gasto_alimentos_cap_c.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-#View(gsdu_gasto_alimentos_cap_c.bigtable.values)
-
-gsmf_compra.monthly.bigtable<-data.frame(gsmf_compra$CODIGO_ENIG ,
-                                         gsmf_compra$GMF_CMPRA_ARTCLO,
-                                         gsmf_compra$GMF_CMPRA_VLR_PAGO_MES,
-                                         gsmf_compra$GMF_CMPRA_LUGAR,
-                                         gsmf_compra$GMF_FORMA_ADQSCION)
-colnames(gsmf_compra.monthly.bigtable)<-c("ENIG_CODE", 
-                                          "Product code", 
-                                          "Adjusted monthly value", 
-                                          "Place of purchase",
-                                          "Way of purchase")
-#View(gsmf_compra.monthly.bigtable)
-#gsmf_compra.monthly.bigtable.values<-summarise(group_by(gsmf_compra.monthly.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-#View(gsmf_compra.monthly.bigtable.values)
-
-gsmf_forma_adqui.bigtable<-data.frame(gsmf_forma_adqui$CODIGO_ENIG, 
-                                      gsmf_forma_adqui$GMF_ADQU_ARTCLO,
-                                      gsmf_forma_adqui$GMF_ADQU_VLR_PAGO_MES,
-                                      gsmf_forma_adqui$GMF_LUGAR,
-                                      gsmf_forma_adqui$GMF_ADQU_FORMA)
-colnames(gsmf_forma_adqui.bigtable)<-c("ENIG_CODE", 
+#############################################################################################
+# File with ENIG_CODE, product code, values, place of purchase, way of purchase and quantities
+#############################################################################################
+    
+    gsdu_gas_dia.bigtable<-data.frame(gsdu_gas_dia$CODIGO_ENIG, 
+                                      gsdu_gas_dia$GDU_ARTCLO, 
+                                      gsdu_gas_dia$GDU_VALOR_PGDO_ESTMDO_MES_AJST,
+                                      gsdu_gas_dia$GDU_LUGAR_CMPRA,
+                                      gsdu_gas_dia$GDU_FORMA_ADQSCION,
+                                      gsdu_gas_dia$GDU_CNTDAD_ADQURDA_MES_AJST , 
+                                      gsdu_gas_dia$GDU_UDM_ESTANDAR)
+    colnames(gsdu_gas_dia.bigtable)<-c("ENIG_CODE", 
                                        "Product code", 
-                                       "Adjusted monthly value",
-                                       "Place of purchase",
-                                       "Way of purchase")
-#gsmf_forma_adqui.bigtable.values<-summarise(group_by(gsmf_forma_adqui.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
-#View(gsmf_forma_adqui.bigtable.values)
+                                       "Adjusted monthly value", 
+                                       "Place of purchase", 
+                                       "Way of purchase", 
+                                       "Adjusted monthly quantity", 
+                                       "Units")
+    gsdu_gas_dia.bigtable.values<-summarise(group_by(gsdu_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
+    #View(gsdu_gas_dia.bigtable.values)
+    
+    
+    gsdp_gas_dia.bigtable<-data.frame(gsdp_gas_dia$CODIGO_ENIG, 
+                                      gsdp_gas_dia$GDP_ARTCLO, 
+                                      gsdp_gas_dia$GDP_VALOR_PGDO_ESTMDO_MES_AJST,
+                                      gsdp_gas_dia$GDP_LUGAR_CMPRA,
+                                      gsdp_gas_dia$GDP_FORMA_ADQSCION,
+                                      gsdp_gas_dia$GDP_CNTDAD_ADQURDA_MES_AJST)
+    colnames(gsdp_gas_dia.bigtable)<-c("ENIG_CODE", 
+                                       "Product code", 
+                                       "Adjusted monthly value", 
+                                       "Place of purchase", 
+                                       "Way of purchase",
+                                       "Adjusted monthly quantity")
+    #gsdp_gas_dia.bigtable.values<-summarise(group_by(gsdp_gas_dia.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
+    #View(gsdp_gas_dia.bigtable.values)
+    
+    
+    gsdu_gasto_alimentos_cap_c.bigtable<-data.frame(paste(gsdu_gasto_alimentos_cap_c$VIVIENDA,gsdu_gasto_alimentos_cap_c$HOGAR, sep=""), 
+                                                    gsdu_gasto_alimentos_cap_c$ARTICULO,
+                                                    gsdu_gasto_alimentos_cap_c$VALOR_MENSUAL_ALIMENTO,
+                                                    gsdu_gasto_alimentos_cap_c$CANTIDAD)
+    colnames(gsdu_gasto_alimentos_cap_c.bigtable)<-c("ENIG_CODE", 
+                                                     "Product code", 
+                                                     "Adjusted monthly value",
+                                                     "Adjusted monthly quantity")
+    #View(gsdu_gasto_alimentos_cap_c.bigtable)
+    #gsdu_gasto_alimentos_cap_c.bigtable.values<-summarise(group_by(gsdu_gasto_alimentos_cap_c.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
+    #View(gsdu_gasto_alimentos_cap_c.bigtable.values)
+    
+    gsmf_compra.monthly.bigtable<-data.frame(gsmf_compra$CODIGO_ENIG ,
+                                             gsmf_compra$GMF_CMPRA_ARTCLO,
+                                             gsmf_compra$GMF_CMPRA_VLR_PAGO_MES,
+                                             gsmf_compra$GMF_CMPRA_LUGAR,
+                                             gsmf_compra$GMF_FORMA_ADQSCION)
+    colnames(gsmf_compra.monthly.bigtable)<-c("ENIG_CODE", 
+                                              "Product code", 
+                                              "Adjusted monthly value", 
+                                              "Place of purchase",
+                                              "Way of purchase")
+    #View(gsmf_compra.monthly.bigtable)
+    #gsmf_compra.monthly.bigtable.values<-summarise(group_by(gsmf_compra.monthly.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
+    #View(gsmf_compra.monthly.bigtable.values)
+    
+    gsmf_forma_adqui.bigtable<-data.frame(gsmf_forma_adqui$CODIGO_ENIG, 
+                                          gsmf_forma_adqui$GMF_ADQU_ARTCLO,
+                                          gsmf_forma_adqui$GMF_ADQU_VLR_PAGO_MES,
+                                          gsmf_forma_adqui$GMF_LUGAR,
+                                          gsmf_forma_adqui$GMF_ADQU_FORMA)
+    colnames(gsmf_forma_adqui.bigtable)<-c("ENIG_CODE", 
+                                           "Product code", 
+                                           "Adjusted monthly value",
+                                           "Place of purchase",
+                                           "Way of purchase")
+    #gsmf_forma_adqui.bigtable.values<-summarise(group_by(gsmf_forma_adqui.bigtable, `Product code`), sum(as.numeric(as.character(`Adjusted monthly value`)), na.rm = TRUE))
+    #View(gsmf_forma_adqui.bigtable.values)
+    
+    #####
+    # File with ENIG_CODE, Product code and value : bigtable.all
+    #####
+    bigtable.list<-list(gsdu_gas_dia.bigtable[,1:3],
+                        gsdp_gas_dia.bigtable[,1:3],
+                        gsdu_gasto_alimentos_cap_c.bigtable[,1:3],
+                        gsmf_compra.monthly.bigtable[,1:3],
+                        gsmf_forma_adqui.bigtable[,1:3])
+    
+    
+    bigtable.all<-Reduce(function(...) rbind(...), bigtable.list)
+    #View(bigtable.all)
+    
+    
+    bigtable.all$HOUSEID<-substr(bigtable.all$ENIG_CODE, 1, 7)
+    #length(unique(bigtable.all$HOUSEID))
+    bigtable.all$`Adjusted monthly value`<-as.numeric(as.character(bigtable.all$`Adjusted monthly value`)) 
+    
+    #####
+
+#############################################################################################
 
 
-bigtable.list<-list(gsdu_gas_dia.bigtable[,1:3],
-                    gsdp_gas_dia.bigtable[,1:3],
-                    gsdu_gasto_alimentos_cap_c.bigtable[,1:3],
-                    gsmf_compra.monthly.bigtable[,1:3],
-                    gsmf_forma_adqui.bigtable[,1:3])
+#
+bigtable.all.housevalues<-summarise(group_by(bigtable.all, HOUSEID), sum(`Adjusted monthly value`, na.rm = TRUE))
 
 
-bigtable.all<-Reduce(function(...) rbind(...), bigtable.list)
-#View(bigtable.all)
 
 
-bigtable.all$HOUSEID<-substr(bigtable.all$ENIG_CODE, 1, 7)
-#length(unique(bigtable.all$HOUSEID))
-bigtable.all$`Adjusted monthly value`<-as.numeric(as.character(bigtable.all$`Adjusted monthly value`)) 
-
-#Total expenses by product (incluiding all modules, without households' information)
-bigtable.all.values<-summarise(group_by(bigtable.all, `Product code`), sum(`Adjusted monthly value`, na.rm = TRUE))
-#View(bigtable.all.values)
-
-
-#For building the dataset at the level of products (Until here any classification can be used for all the products)
-bigtable.outone<-summarise(group_by(bigtable.all, HOUSEID, `Product code`), sum(`Adjusted monthly value`, na.rm = TRUE))
-colnames(bigtable.outone)<-c("HOUSEID", "PRODUCTCODE", "VALUE")
-#bigtable.out.houseandproduct<-cast(bigtable.outone, HOUSEID ~ PRODUCTCODE)
-#length(unique(bigtable.outone$HOUSEID))
 
 
