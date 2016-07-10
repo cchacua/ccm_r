@@ -73,6 +73,8 @@ library(reshape)
   write.xlsx2(houseandproduct.addedmod.indi,"../outputs/houseandproduct.addedmod.indi.xlsx")
   colnames(houseandproduct.addedmod.indi)
   
+  
+  
 #############################################################################################
   
   
@@ -81,11 +83,11 @@ library(reshape)
 #####  
   #
   # http://r-statistics.co/Outlier-Treatment-With-R.html
-  outliers<-as.data.frame(sapply(houseandproduct.addedmod.indi[,3:242], remove_outliers3))
+  outliers<-as.data.frame(sapply(houseandproduct.addedmod.indi[,3:242], remove_outliers4))
   outliers$HOUSEID<-houseandproduct.addedmod.indi$id.v
   View(outliers[,c(241,1:10)])
   outliersdel<-na.omit(outliers)
-  nrow(outliersdel)
+  nrow(outliersdel)/1391
   
 ###############################################################################################    
   
@@ -96,12 +98,27 @@ library(reshape)
                                          levelcode.labels=classsubandpro,
                                          levelcode.labels.by="products.code",
                                          saveto="../outputs/Consumption by product .xlsx")
+  
   View(conbyproduct)
+  
+  conbyproduct2<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
+                              levelcode.labels=classsubandpro,
+                              levelcode.labels.by="products.code",
+                              saveto="../outputs/Consumption by product 2.xlsx")
+  
+  View(conbyproduct2)
+  
+  conbyproduct3<-agg.consu.sum3(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
+                                levelcode.labels=classsubandpro,
+                                levelcode.labels.by="products.code",
+                                saveto="../outputs/Consumption by product 2.xlsx", individuals)
+  
+  View(conbyproduct3)
    
 ###############################################################################################
 
 ###############################################################################################
-# Table consumption of food products
+# Table consumption of class
 #####    
   # Aggregated table of consumption by class
   conbyclass<-agg.consu.sum(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$CLASSCODE, value.v=bigtable.outone$VALUE), 
