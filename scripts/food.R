@@ -46,10 +46,49 @@ library(reshape)
   #From here, only food products are used
   bigtable.outone$CLASSTWO<-substr(bigtable.outone$PRODUCTCODE, 1, 2)
   bigtable.outone<-bigtable.outone[bigtable.outone$CLASSTWO=="01"  | bigtable.outone$CLASSTWO=="02",]
-  View(bigtable.outone)
+
   
 ###############################################################################################  
 
+  
+#############################################################################################
+# Product big table with added modules
+#############################################################################################
+  #####
+  # House and DANE product table
+  #   
+  bigtable.outone.wpro<-merge(bigtable.outone, products.dane, by.x="PRODUCTCODE", by.y="products.code", all.x = TRUE)
+  houseandproduct.addedmod<-bigtable.full(df.src=data.frame(id.v=bigtable.outone.wpro$HOUSEID, levelcode.v=bigtable.outone.wpro$PRODUCTCODE, levelname.v=bigtable.outone.wpro$products.name.es, value.v=bigtable.outone.wpro$VALUE),
+                                          houses.df=houses, 
+                                          households.df=households, 
+                                          individuals.df=individuals)
+  View(houseandproduct.addedmod)
+  write.xlsx2(houseandproduct.addedmod,"../outputs/houseandproduct.addedmod.xlsx")
+  
+  houseandproduct.addedmod.indi<-bigtable.full.individuals(df.src=data.frame(id.v=bigtable.outone.wpro$HOUSEID, levelcode.v=bigtable.outone.wpro$PRODUCTCODE, levelname.v=bigtable.outone.wpro$products.name.es, value.v=bigtable.outone.wpro$VALUE),
+                                                           houses.df=houses, 
+                                                           households.df=households, 
+                                                           individuals.df=individuals)
+  View(houseandproduct.addedmod.indi)
+  write.xlsx2(houseandproduct.addedmod.indi,"../outputs/houseandproduct.addedmod.indi.xlsx")
+  colnames(houseandproduct.addedmod.indi)
+  
+#############################################################################################
+  
+  
+###############################################################################################
+# Outliers
+#####  
+  #
+  # http://r-statistics.co/Outlier-Treatment-With-R.html
+  outliers<-as.data.frame(sapply(houseandproduct.addedmod.indi[,3:242], remove_outliers3))
+  outliers$HOUSEID<-houseandproduct.addedmod.indi$id.v
+  View(outliers[,c(241,1:10)])
+  outliersdel<-na.omit(outliers)
+  nrow(outliersdel)
+  
+###############################################################################################    
+  
 ###############################################################################################
 # Table consumption of food products
 #####
@@ -90,32 +129,11 @@ library(reshape)
                                                          houses.df=houses, 
                                                          households.df=households, 
                                                          individuals.df=individuals)
+  
+  
   write.xlsx2(houseandclass.addedmod.indi,"../outputs/houseandclass.addedmod.indi.xlsx")
   #View(houseandclass.addedmod.indi)
 #############################################################################################
   
-  
-#############################################################################################
-# Product big table with added modules
-#############################################################################################
-  #####
-  # House and DANE product table
-  #   
-  bigtable.outone.wpro<-merge(bigtable.outone, products.dane, by.x="PRODUCTCODE", by.y="products.code", all.x = TRUE)
-  houseandproduct.addedmod<-bigtable.full(df.src=data.frame(id.v=bigtable.outone.wpro$HOUSEID, levelcode.v=bigtable.outone.wpro$PRODUCTCODE, levelname.v=bigtable.outone.wpro$products.name.es, value.v=bigtable.outone.wpro$VALUE),
-                                        houses.df=houses, 
-                                        households.df=households, 
-                                        individuals.df=individuals)
-  
-  write.xlsx2(houseandproduct.addedmod,"../outputs/houseandproduct.addedmod.xlsx")
-  
-  houseandproduct.addedmod.indi<-bigtable.full.individuals(df.src=data.frame(id.v=bigtable.outone.wpro$HOUSEID, levelcode.v=bigtable.outone.wpro$PRODUCTCODE, levelname.v=bigtable.outone.wpro$products.name.es, value.v=bigtable.outone.wpro$VALUE),
-                                          houses.df=houses, 
-                                          households.df=households, 
-                                          individuals.df=individuals)
-  View(houseandproduct.addedmod.indi)
-  write.xlsx2(houseandproduct.addedmod.indi,"../outputs/houseandproduct.addedmod.indi.xlsx")
 
-#############################################################################################
-  
   

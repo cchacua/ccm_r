@@ -170,6 +170,7 @@ bigtable.full<-function(df.src, houses.df, households.df, individuals.df){
   return(o)
 } 
 
+
 bigtable.full.individuals<-function(df.src, houses.df, households.df, individuals.df){
   #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
   print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
@@ -189,3 +190,150 @@ bigtable.full.individuals<-function(df.src, houses.df, households.df, individual
   return(o)
 } 
 
+bigtable.full.individuals<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  #print(colnames(table.df))
+  table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  myNumCols <- which(unlist(lapply(table.df, is.numeric)))
+  numberofindi<-merge(table.df, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  table.df$vector<-numberofindi$`Number of people inside the household`
+  table.df[, myNumCols]<-sweep(table.df[, myNumCols],1,table.df$vector,`/`)
+  #sapply(table.df[, myNumCols], function(x)(x/2))
+  table.df$VIVIENDA<-substr(table.df$id.v, 1, 5)
+  o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  o<-merge(o, households.df, by.x="id.v", by.y="HOUSEID", all.x=TRUE)
+  o<-merge(o, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  o[o== ""] <- NA
+  return(o)
+} 
+
+
+bigtable.outliers.individuals<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  #print(colnames(table.df))
+  #table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  myNumCols <- which(unlist(lapply(table.df, is.numeric)))
+  numberofindi<-merge(table.df, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  table.df$vector<-numberofindi$`Number of people inside the household`
+  table.df[, myNumCols]<-sweep(table.df[, myNumCols],1,table.df$vector,`/`)
+  table.df[table.df== 0]<-NA
+  table.df[, myNumCols]<-sapply(table.df[, myNumCols], function(x){
+    qnt <- quantile(x, probs=c(.50), na.rm = T)
+    print(qnt)
+    H <- 6* IQR(x, na.rm = T)
+    print(H)
+    x<-ifelse(x > (qnt + H), 0, x)
+    print(length(x[x > (qnt + H)]))
+  })
+
+  table.df[is.na(table.df)]<-0.0001
+  table.df[table.df== 0]<-NA
+  table.df[table.df== 0.0001]<-0
+  o<-na.omit(table.df)
+  #sapply(table.df[, myNumCols], function(x)(x/2))
+  #   table.df$VIVIENDA<-substr(table.df$id.v, 1, 5)
+  #   o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  #   o<-merge(o, households.df, by.x="id.v", by.y="HOUSEID", all.x=TRUE)
+  #   o<-merge(o, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  # o[o== ""] <- NA
+  return(o)
+} 
+
+
+bigtable.outlierssimple.individuals<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  #print(colnames(table.df))
+  #table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
+  myNumCols <- which(unlist(lapply(table.df, is.numeric)))
+  numberofindi<-merge(table.df, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  table.df$vector<-numberofindi$`Number of people inside the household`
+  table.df[, myNumCols]<-sweep(table.df[, myNumCols],1,table.df$vector,`/`)
+  table.df[, myNumCols]<-sapply(table.df[, myNumCols], function(x){
+    qnt <- quantile(x, probs=c(.50), na.rm = T)
+    print(qnt)
+    H <- 6* IQR(x, na.rm = T)
+    print(H)
+    x<-ifelse(x > (qnt + H), NA, x)
+    print(length(x[x > (qnt + H)]))
+  })
+  o<-table.df
+  #sapply(table.df[, myNumCols], function(x)(x/2))
+  #   table.df$VIVIENDA<-substr(table.df$id.v, 1, 5)
+  #   o<-merge(table.df, houses.df, by="VIVIENDA", all.x=TRUE)
+  #   o<-merge(o, households.df, by.x="id.v", by.y="HOUSEID", all.x=TRUE)
+  #   o<-merge(o, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  # o[o== ""] <- NA
+  return(o)
+} 
+
+bigtable.outliersreplace.individuals<-function(df.src, houses.df, households.df, individuals.df){
+  #df.src=data.frame(id.v, levelcode.v, levelname.v, value.v)
+  print("All modules, but df.src, should contain the VIVIENDA and HOUSEID variables")
+  table.df<-cast(df.src, id.v ~ levelcode.v + levelname.v, sum, value="value.v")
+  myNumCols <- which(unlist(lapply(table.df, is.numeric)))
+  numberofindi<-merge(table.df, individuals.df, by="id.v",by.y="HOUSEID", all.x=TRUE)
+  table.df$vector<-numberofindi$`Number of people inside the household`
+  table.df[, myNumCols]<-sweep(table.df[, myNumCols],1,table.df$vector,`/`)
+  table.df[table.df== 0]<-NA
+  #http://r-statistics.co/Outlier-Treatment-With-R.html
+  table.df[, myNumCols]<-sapply(table.df[, myNumCols], function(x){
+    qnt <- quantile(x, probs=c(.25, .75), na.rm = T)
+    caps <- quantile(x, probs=c(.05, .95), na.rm = T)
+    H <- 1.5 * IQR(x, na.rm = T)
+    print("Limit: ")
+    print(qnt[2] + H)
+    print("Replaced value: ")
+    print(caps[2])
+    #x[x < (qnt[1] - H)] <- caps[1]
+    x[x > (qnt[2] + H)] <- caps[2]
+    print("# of replaced values: ")
+    print(length(x[x > (qnt[2] + H)]))
+  })
+  
+  return(table.df)
+} 
+
+outliers.delete<-function(x){
+  qnt <- quantile(x, probs=c(.50), na.rm = T)
+  print(qnt)
+  H <- 6* IQR(x, na.rm = T)
+  print(H)
+  x<-ifelse(x > (qnt + H), 0, x)
+  print(length(x[x > (qnt + H)]))
+}
+
+remove_outliers <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = na.rm, ...)
+  H <- 1.5 * IQR(x, na.rm = na.rm)
+  y <- x
+  #y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+remove_outliers2 <- function(x, na.rm = TRUE, ...) {
+  qnt <- quantile(x, probs=c(.25, .50), na.rm = na.rm, ...)
+  H <- 10 * IQR(x, na.rm = na.rm)
+  y <- x
+  #y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+remove_outliers3 <- function(x, na.rm = TRUE, ...) {
+  x[x==0]<-NA
+  qnt <- quantile(x, probs=c(.25, .50), na.rm = na.rm, ...)
+  H <- 50 * IQR(x, na.rm = na.rm)
+  y <- x
+  #y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- 0.001
+  y[is.na(y)]<-0
+  y[y==0.001]<-NA
+  y
+}
