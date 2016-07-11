@@ -215,6 +215,8 @@ library(reshape2)
                               "Standard deviation",
                               "Budget share")
     View(conbyproduct)
+    write.xlsx2(conbyproduct, "../outputs/Consumption by product of households and individuals.xlsx")
+
     #sum(conbyproduct$PROPGASTO)
 ###############################################################################################
 
