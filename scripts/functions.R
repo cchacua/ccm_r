@@ -202,6 +202,27 @@ agg.consu.sum3<-function(df.src, levelcode.labels, levelcode.labels.by, saveto="
   return(ptable.conbylevel)
 }
 
+agg.consu.sum4<-function(df.src, levelcode.labels, levelcode.labels.by, saveto="../outputs/name.xlsx"){
+  #df.src=data.frame(id.v, levelcode.v, value.v)  
+  ptable<-cast(df.src, id.v ~ levelcode.v, sum, value="value.v")
+  
+  # Sums of values 
+  ptable.tvalue<-as.data.frame(colSums(ptable))
+  # Times where value>0 in each column
+  ptable.myNumCols <- which(unlist(lapply(ptable, is.numeric)))
+  ptable.number<- as.data.frame(sapply(ptable[, ptable.myNumCols], function(x)(sum(x > 0, na.rm=TRUE))))
+  ptable.conbylevel<-merge(ptable.tvalue, ptable.number, by.x=0, by.y=0, all=TRUE)
+  ptable.conbylevel$AVERAGE<-ptable.conbylevel[,2]/ptable.conbylevel[,3]
+  colnames(ptable.conbylevel)<-c("Code", "Total consumption", "Numer of consumer households", "Average consumption")
+  # Labels for the levelcode variable
+  ptable.conbylevel1<-merge(ptable.conbylevel[,1:2], levelcode.labels, by.x=1, by.y=levelcode.labels.by, all.x=TRUE)
+  ptable.conbylevel<-merge(ptable.conbylevel1, ptable.conbylevel, by="Code", all=TRUE)
+  ptable.conbylevel<-ptable.conbylevel[,c(1,3:ncol(ptable.conbylevel))]
+  write.xlsx2(ptable.conbylevel, saveto)
+  return(ptable.conbylevel)
+}
+
+
 add.rlvnt.houshld.inf<-function(table.df, houseid.v, houses.df, households.df, individuals.df){
   print("All modules should contain the VIVIENDA and HOUSEID variables")
   table.df$`Total food consumption`<-rowSums(table.df[,2:ncol(table.df)])
@@ -402,11 +423,11 @@ remove_outliers4 <- function(x, na.rm = TRUE, ...) {
   x[x==0]<-NA
   qnt <- quantile(x, probs=c(.25, .50), na.rm = na.rm, ...)
   caps <- quantile(x, probs=c(.05, .95), na.rm = T)
-  H <- 20 * IQR(x, na.rm = na.rm)
+  H <- 30 * IQR(x, na.rm = na.rm)
   y <- x
   #y[x < (qnt[1] - H)] <- NA
   #y[x > (qnt[2] + H)] <- caps[2]
-  y<-ifelse( y > (qnt[2] + H), 0.001, y)
+  y<-ifelse( y > (qnt[2] + H),ifelse(y<3000, y,caps[2]), y)
   y[is.na(y)]<-0
   y[y==0.001]<-NA
   y
