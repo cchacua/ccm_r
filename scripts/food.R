@@ -179,20 +179,43 @@ library(reshape2)
   
   #write.xlsx(alpha.pre.item, file="Alpha items.xlsx", sheetName=paste(nombredimension, "pre"), append=TRUE)
   
-  #   conbyproduct2<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
-  #                               levelcode.labels=classsubandpro,
-  #                               levelcode.labels.by="products.code",
-  #                               saveto="../outputs/Consumption by product 2.xlsx")
-  #   
-  #   View(conbyproduct2)
-  #   
-  #   conbyproduct3<-agg.consu.sum3(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
-  #                                 levelcode.labels=classsubandpro,
-  #                                 levelcode.labels.by="products.code",
-  #                                 saveto="../outputs/Consumption by product 2.xlsx", individuals)
-  #   
-  #   View(conbyproduct3)
-   
+    #     conbyproduct.households<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
+    #                                 levelcode.labels=classsubandpro,
+    #                                 levelcode.labels.by="products.code",
+    #                                 saveto="../outputs/Consumption by product of households.xlsx")
+    
+    #View(conbyproduct.households)
+    
+    
+    conbyproduct.indiv<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone.indiv$HOUSEID, levelcode.v=bigtable.outone.indiv$PRODUCTCODE, value.v=bigtable.outone.indiv$VALUE), 
+                                  levelcode.labels=classsubandpro,
+                                  levelcode.labels.by="products.code",
+                                  saveto="../outputs/Consumption by product of households.xlsx")
+    
+    #View(conbyproduct.indiv)
+    #colnames(conbyproduct.indiv)
+    
+    conbyproduct<-merge(conbyproduct.households,conbyproduct.indiv[,c(1,(ncol(conbyproduct.indiv)-1):ncol(conbyproduct.indiv))], by="Code")
+    conbyproduct$PROPGASTO<-(conbyproduct$`Total consumption.y`/sum(conbyproduct$`Total consumption.y`))*100
+    colnames(conbyproduct)<-c("Product code",
+                              "Class code",
+                              "Class name (Spanish)",
+                              "Class name (English)",
+                              "Class name (French)",
+                              "Subclass code",
+                              "Subclass name (Spanish)",
+                              "Subclass name (English)",
+                              "Subclass description (English)",
+                              "Product name (Spanish)",
+                              "Total household monthly consumption",
+                              "Number of consumer households",
+                              "Average household monthly consumption",
+                              "Standard deviation",
+                              "Average individual monthly consumption",
+                              "Standard deviation",
+                              "Budget share")
+    View(conbyproduct)
+    #sum(conbyproduct$PROPGASTO)
 ###############################################################################################
 
 ###############################################################################################
