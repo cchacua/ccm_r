@@ -23,3 +23,12 @@ library(Hmisc)
 
 install.packages("reshape2")
 library(reshape2)
+
+install.packages("sfsmisc")
+library(sfsmisc)
+
+install.packages("ggplot2")
+library(ggplot2)
+
+install.packages("psych")
+library(psych)

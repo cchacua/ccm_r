@@ -426,3 +426,9 @@ agg.consu.sum4<-function(df.src, levelcode.labels, levelcode.labels.by, saveto="
   write.xlsx2(ptable.conbylevel, saveto)
   return(ptable.conbylevel)
 }
+
+
+bplot<- ggplot(foodandinc, aes(x=`Quintile number`, y=`0111_Bread and cereals`, fill=Quintile)) + 
+  geom_boxplot()
+ggsave("0111_Bread and cereals.png", scale=0.9)
+#ggsave(file=paste(nombredimension, "pre.PCA.png"), scale=0.9)

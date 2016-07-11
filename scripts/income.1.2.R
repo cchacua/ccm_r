@@ -12,7 +12,7 @@ library(dplyr)
   # P5160S1A1 En dinero	¿En los últimos doce meses, algún miembro del hogar recibió subsidio del gobierno o de otra institución para la compra o construcción de vivienda, casalote o lote?
   # /12
   i1.2<-add.nor.var.yearly(basedf=hogares.cali.ml, id.v="HOUSEID", value.v="P5160S1A1", output.df=i1.2)
-  
+
 # 1.2.3 Otros subsidios del gobierno en dinero 
   # P5190S1A1	Este o estos subsidios los reciben: En dinero? - Cuánto recibieron en los últimos doce meses?
   # /12

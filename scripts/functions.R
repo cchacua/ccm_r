@@ -380,3 +380,25 @@ remove_outliers4 <- function(x, na.rm = TRUE, ...) {
   y[y==0.001]<-NA
   y
 }
+
+graph.boxplot<-function(y.v, df.src=foodandinc){
+  df<-df.src[, c(y.v, "Quintile number", "Quintile")]
+  y.name<-substr(y.v,1,4)
+  colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+    geom_boxplot()+labs(x = "Quintile number", y=y.name)
+  bplot
+  #ggsave("0111_Bread and cereals.png", scale=0.9)
+  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), scale=0.9)
+}
+
+graph.boxplot.nova<-function(y.v, df.src=foodandinc.nova){
+  df<-df.src[, c(y.v, "Quintile number", "Quintile")]
+  y.name<-substr(y.v,1,1)
+  colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+    geom_boxplot()+labs(x = "Quintile number", y=y.name)
+  bplot
+  #ggsave("0111_Bread and cereals.png", scale=0.9)
+  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), scale=0.9)
+}

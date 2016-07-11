@@ -33,6 +33,9 @@ library(reshape2)
   subandpro$class<-substr(subandpro$subclass.code, 1, 4)
   classsubandpro<-merge(class.dane, subandpro, by.x="class.code", by.y="class", all=TRUE)
 
+  
+  # NOVA class
+  class.nova<-read.xlsx(m.labels[4], sheetName="class.nova",encoding="UTF-8")
 ###############################################################################################
 # Outone: Table products by household
 #####
@@ -109,8 +112,6 @@ library(reshape2)
 
   View(bigtable.outone)
   
-  # Para las categorias eliminar 1% des menages a droite
-  # Eliminar 
 ###############################################################################################    
   
   
@@ -166,7 +167,58 @@ library(reshape2)
   #View(houseandclass.addedmod.indi)
 #############################################################################################
   
-    
+#############################################################################################
+# Class big table with added modules
+#############################################################################################
+  #####
+  # House and DANE class table
+  # 
+  bigtable.outone.wdclass<-bigtable.outone
+  bigtable.outone.wdclass$CLASSFOUR<-substr(bigtable.outone.wdclass$CLASSCODE,1,4)
+  bigtable.outone.wdclass<-merge(bigtable.outone.wdclass, class.dane, by.x="CLASSFOUR", by.y="class.code", all.x = TRUE)
+  
+  houseandclass.14.addedmod<-bigtable.full(df.src=data.frame(id.v=bigtable.outone.wdclass$HOUSEID, levelcode.v=bigtable.outone.wdclass$CLASSFOUR, levelname.v=bigtable.outone.wdclass$class.name.en, value.v=bigtable.outone.wdclass$VALUE),
+                                        houses.df=houses, 
+                                        households.df=households, 
+                                        individuals.df=individuals)
+  #View(houseandclass.14.addedmod)
+  write.xlsx2(houseandclass.14.addedmod,"../outputs/Food consumption by Class at household level.xlsx")
+  houseandclass.14.addedmod.indi<-bigtable.full.individuals(df.src=data.frame(id.v=bigtable.outone.wdclass$HOUSEID, levelcode.v=bigtable.outone.wdclass$CLASSFOUR, levelname.v=bigtable.outone.wdclass$class.name.en, value.v=bigtable.outone.wdclass$VALUE),
+                                                            houses.df=houses, 
+                                                            households.df=households, 
+                                                            individuals.df=individuals)
+  
+  
+  write.xlsx2(houseandclass.14.addedmod.indi,"../outputs/Average individual food consumption by Class at household level.xlsx")
+  #View(houseandclass.14.addedmod.indi)
+#############################################################################################
+  
+  
+#############################################################################################
+# NOVA Class big table with added modules
+#############################################################################################
+#####
+  # House and NOVA class table
+
+  bigtable.outone.wnovaclass<-merge(bigtable.outone, class.nova, by.x="PRODUCTCODE", by.y="product.code", all.x = TRUE)
+  View(bigtable.outone.wnovaclass)
+  #unique(bigtable.outone.wnovaclass$PRODUCTCODE[is.na(bigtable.outone.wnovaclass$class.code)])
+  houseandclass.nova.addedmod<-bigtable.full(df.src=data.frame(id.v=bigtable.outone.wnovaclass$HOUSEID, levelcode.v=bigtable.outone.wnovaclass$class.code, levelname.v=bigtable.outone.wnovaclass$class.name.en, value.v=bigtable.outone.wnovaclass$VALUE),
+                                             houses.df=houses, 
+                                             households.df=households, 
+                                             individuals.df=individuals)
+  # View(houseandclass.nova.addedmod)
+  write.xlsx2(houseandclass.nova.addedmod,"../outputs/Food consumption by NOVA Class at household level.xlsx")
+  houseandclass.nova.addedmod.indi<-bigtable.full.individuals(df.src=data.frame(id.v=bigtable.outone.wnovaclass$HOUSEID, levelcode.v=bigtable.outone.wnovaclass$class.code, levelname.v=bigtable.outone.wnovaclass$class.name.en, value.v=bigtable.outone.wnovaclass$VALUE),
+                                                              houses.df=houses, 
+                                                              households.df=households, 
+                                                              individuals.df=individuals)
+  
+  
+  write.xlsx2(houseandclass.nova.addedmod.indi,"../outputs/Average individual food consumption by NOVA Class at household level.xlsx")
+#############################################################################################
+  
+      
 ###############################################################################################
 # Table consumption of food products
 #####

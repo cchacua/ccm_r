@@ -62,17 +62,20 @@ library(dplyr)
  totalincome<- merge(totalincome, i3.2, by="HOUSEID", all=TRUE)
  totalincome$total<-rowSums(totalincome[,2:4])
  colnames(totalincome)<-c("HOUSEID", "Nominal monetary income", "Nominal non-monetary income", "Nominal Occasional monetary income", "Total income" )
+ 
+ totalincome<-merge(totalincome, houseandproduct.addedmod[,1:2], by.x="HOUSEID", by.y="id.v")
+
  totalincome$`Empirical Cumulative Income Distribution`<-ecdf(totalincome$`Total income`)(totalincome$`Total income`)
  totalincome$`Quintile`<-cut2(totalincome$`Total income`, g=5)
  totalincome$`Quintile number`<-as.numeric(totalincome$`Quintile`)
-#  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
-#  quantile(totalincome$`Total income`, probs = seq(0, 1, by= 0.1))
-#  quantile(totalincome$`Total income`, prob = seq(0, 1, length = 11), type = 5)
-#  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
+  #  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
+  #  quantile(totalincome$`Total income`, probs = seq(0, 1, by= 0.1))
+  #  quantile(totalincome$`Total income`, prob = seq(0, 1, length = 11), type = 5)
+  #  quantile(totalincome$`Total income`, probs = c(0, 0.25, 0.5, 0.75, 1))
  
  View(totalincome)
  
- write.xlsx2(totalincome,"../outputs/totalincome.xlsx")
+ write.xlsx2(totalincome,"../outputs/Total income.xlsx")
  
 ##############
 
