@@ -222,27 +222,25 @@ library(reshape2)
 ###############################################################################################
 # Table consumption of food products
 #####
-  conbyproduct<-agg.consu.sum(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
-                                         levelcode.labels=classsubandpro,
-                                         levelcode.labels.by="products.code",
-                                         saveto="../outputs/Consumption by product .xlsx")
+    #   conbyproduct<-agg.consu.sum(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
+    #                                          levelcode.labels=classsubandpro,
+    #                                          levelcode.labels.by="products.code",
+    #                                          saveto="../outputs/Consumption by product .xlsx")
+    #   
+    #   View(conbyproduct)
   
-  View(conbyproduct)
-  
-  #write.xlsx(alpha.pre.item, file="Alpha items.xlsx", sheetName=paste(nombredimension, "pre"), append=TRUE)
-  
-    #     conbyproduct.households<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
-    #                                 levelcode.labels=classsubandpro,
-    #                                 levelcode.labels.by="products.code",
-    #                                 saveto="../outputs/Consumption by product of households.xlsx")
+    conbyproduct.households<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$PRODUCTCODE, value.v=bigtable.outone$VALUE), 
+                                    levelcode.labels=classsubandpro,
+                                    levelcode.labels.by="products.code",
+                                    saveto="../outputs/Consumption by product of households.xlsx")
     
-    #View(conbyproduct.households)
+    View(conbyproduct.households)
     
     
     conbyproduct.indiv<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone.indiv$HOUSEID, levelcode.v=bigtable.outone.indiv$PRODUCTCODE, value.v=bigtable.outone.indiv$VALUE), 
                                   levelcode.labels=classsubandpro,
                                   levelcode.labels.by="products.code",
-                                  saveto="../outputs/Consumption by product of households.xlsx")
+                                  saveto="../outputs/Average individual consumption by product of households.xlsx")
     
     #View(conbyproduct.indiv)
     #colnames(conbyproduct.indiv)
@@ -273,17 +271,90 @@ library(reshape2)
 ###############################################################################################
 
 ###############################################################################################
-# Table consumption of class
+# Table consumption of DANE food classes
 #####    
   # Aggregated table of consumption by class
-  conbyclass<-agg.consu.sum(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$CLASSCODE, value.v=bigtable.outone$VALUE), 
-                                         levelcode.labels=subclass.dane, 
+  #   conbyclass<-agg.consu.sum(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$CLASSCODE, value.v=bigtable.outone$VALUE), 
+  #                                          levelcode.labels=subclass.dane, 
+  #                                          levelcode.labels.by="subclass.code",
+  #                                          saveto="../outputs/Consumption by class .xlsx")
+  #   View(conbyclass)
+  
+  conbydclass.households<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone$HOUSEID, levelcode.v=bigtable.outone$CLASSCODE, value.v=bigtable.outone$VALUE), 
+                                         levelcode.labels=subclass.dane,
                                          levelcode.labels.by="subclass.code",
-                                         saveto="../outputs/Consumption by class .xlsx")
-  View(conbyclass)
+                                         saveto="../outputs/Household consumption by DANE Classes.xlsx")
+  
+
+  #View(conbydclass.households)
+  
+  conbydclass.indiv<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone.indiv$HOUSEID, levelcode.v=bigtable.outone.indiv$CLASSCODE, value.v=bigtable.outone.indiv$VALUE), 
+                                    levelcode.labels=subclass.dane,
+                                    levelcode.labels.by="subclass.code",
+                                    saveto="../outputs/Average indivual household consumption by DANE Classes.xlsx")
+  
+  #View(conbydclass.indiv)
+  #colnames(conbydclass.indiv)
+  
+  conbydclass<-merge(conbydclass.households,conbydclass.indiv[,c(1,(ncol(conbydclass.indiv)-1):ncol(conbydclass.indiv))], by="Code")
+  conbydclass$PROPGASTO<-(conbydclass$`Total consumption.y`/sum(conbydclass$`Total consumption.y`))*100
+  colnames(conbydclass)
+  colnames(conbydclass)<-c("Subclass code",
+                           "Subclass name (Spanish)",
+                           "Subclass name (English)",
+                           "Subclass description (English)",
+                           "Total household monthly consumption",
+                           "Number of consumer households",
+                           "Average household monthly consumption",
+                           "Standard deviation",
+                           "Average individual monthly consumption",
+                           "Standard deviation",
+                           "Budget share")
+  
+  conbydclass$`Average individual monthly consumption (all people)`<-conbydclass$`Total household monthly consumption`/sum(houseandclass.addedmod$`Number of people inside the household`)
+  View(conbydclass)
+  
+  write.xlsx2(conbydclass, "../outputs/Consumption by Dane Class of households and individuals.xlsx")
+  
+###############################################################################################
+
   
   
 ###############################################################################################
- 
-
+# Table consumption of NOvA food classes
+#####    
+  conbynovaclass.households<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone.wnovaclass$HOUSEID, levelcode.v=bigtable.outone.wnovaclass$class.code, value.v=bigtable.outone.wnovaclass$VALUE), 
+                                            levelcode.labels=unique(class.nova[,2:3]),
+                                            levelcode.labels.by="class.code",
+                                            saveto="../outputs/Household consumption by NOVA Classes.xlsx")
+  #View(conbynovaclass.households)
+  
+  bigtable.outone.wnovaclass.indiv<-merge(bigtable.outone.indiv, class.nova, by.x="PRODUCTCODE", by.y="product.code", all.x = TRUE)
+  
+  conbynovaclass.indiv<-agg.consu.sum2(df.src=data.frame(id.v=bigtable.outone.wnovaclass.indiv$HOUSEID, levelcode.v=bigtable.outone.wnovaclass.indiv$class.code, value.v=bigtable.outone.wnovaclass.indiv$VALUE), 
+                                       levelcode.labels=unique(class.nova[,2:3]),
+                                       levelcode.labels.by="class.code",
+                                       saveto="../outputs/Average indivual household consumption by NOVA Classes.xlsx")
+  
+  View(conbynovaclass.indiv)
+  #colnames(conbynovaclass.indiv)
+  
+  conbynovaclass<-merge(conbynovaclass.households,conbynovaclass.indiv[,c(1,(ncol(conbynovaclass.indiv)-1):ncol(conbynovaclass.indiv))], by="Code")
+  conbynovaclass$PROPGASTO<-(conbynovaclass$`Total consumption.y`/sum(conbynovaclass$`Total consumption.y`))*100
+  colnames(conbynovaclass)
+  colnames(conbynovaclass)<-c("NOVA code",
+                              "Class name (English)",
+                              "Total household monthly consumption",
+                              "Number of consumer households",
+                              "Average household monthly consumption",
+                              "Standard deviation",
+                              "Average individual monthly consumption",
+                              "Standard deviation",
+                              "Budget share")
+  
+  conbynovaclass$`Average individual monthly consumption (all people)`<-conbynovaclass$`Total household monthly consumption`/sum(houseandclass.addedmod$`Number of people inside the household`)
+  View(conbynovaclass)
+  write.xlsx2(conbynovaclass, "../outputs/Consumption by NOVA Class of households and individuals.xlsx")
+###############################################################################################
+  
   
