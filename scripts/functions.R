@@ -384,21 +384,62 @@ remove_outliers4 <- function(x, na.rm = TRUE, ...) {
 graph.boxplot<-function(y.v, df.src=foodandinc){
   df<-df.src[, c(y.v, "Quintile number", "Quintile")]
   y.name<-substr(y.v,1,4)
+  y.name2<-substr(y.v,6,nchar(y.v))
   colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  ylim1 = boxplot.stats(df$CLASS)$stats[c(1, 5)]
   bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
-    geom_boxplot()+labs(x = "Quintile number", y=y.name)
+    geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=paste("Consumption of",y.name, "subclass (COP)", sep=" "))+ ggtitle(paste(y.name, y.name2, sep=" "))+
+    coord_cartesian(ylim = 1.5*ylim1)
   bplot
-  #ggsave("0111_Bread and cereals.png", scale=0.9)
-  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), scale=0.9)
+  #ggsave("0111_Bread and cereals.png", scale=0.9) 
+  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), width = 23, height = 12, units = "cm", scale=0.9)
+}
+
+graph.boxplot.consummer<-function(y.v, df.src=foodandinc){
+  df<-df.src[, c(y.v, "Quintile number", "Quintile")]
+  
+  y.name<-substr(y.v,1,4)
+  y.name2<-substr(y.v,6,nchar(y.v))
+  colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  df<-df[df$CLASS>0,]
+  ylim1 = boxplot.stats(df$CLASS)$stats[c(1, 5)]
+  bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+    geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=paste("Consumption of",y.name, "subclass (COP)", sep=" "))+ ggtitle(paste(y.name, y.name2, sep=" "))+
+    coord_cartesian(ylim = 1.9*ylim1)
+  bplot
+  #ggsave("0111_Bread and cereals.png", scale=0.9) 
+  ggsave(file=paste("../outputs/", y.v, "_only consummers boxplot.png"), width = 23, height = 12, units = "cm", scale=0.9)
 }
 
 graph.boxplot.nova<-function(y.v, df.src=foodandinc.nova){
   df<-df.src[, c(y.v, "Quintile number", "Quintile")]
   y.name<-substr(y.v,1,1)
+  y.name2<-substr(y.v,3,nchar(y.v))
   colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  ylim1 = boxplot.stats(df$CLASS)$stats[c(1, 5)]
   bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
-    geom_boxplot()+labs(x = "Quintile number", y=y.name)
+    geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=paste(y.name2, "(COP)", sep=" "))+ ggtitle(paste(y.name, y.name2, sep=" "))+
+    coord_cartesian(ylim = 1.8*ylim1)
+  #   bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+  #     geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=y.name)
   bplot
-  #ggsave("0111_Bread and cereals.png", scale=0.9)
-  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), scale=0.9)
+  #ggsave("0111_Bread and cereals.png", scale=0.9)  
+  ggsave(file=paste("../outputs/", y.v, "_boxplot.png"), width = 23, height = 12, units = "cm", scale=0.9)
+}
+
+graph.boxplot.nova.consummers<-function(y.v, df.src=foodandinc.nova){
+  df<-df.src[, c(y.v, "Quintile number", "Quintile")]
+  y.name<-substr(y.v,1,1)
+  y.name2<-substr(y.v,3,nchar(y.v))
+  colnames(df)<-c("CLASS", "Quintile number", "Quintile")
+  df<-df[df$CLASS>0,]
+  ylim1 = boxplot.stats(df$CLASS)$stats[c(1, 5)]
+  bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+    geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=paste(y.name2, "(COP)", sep=" "))+ ggtitle(paste(y.name, y.name2, sep=" "))+
+    coord_cartesian(ylim = 1.8*ylim1)
+  #   bplot<- ggplot(df, aes(x=`Quintile number`, y=CLASS, fill=Quintile)) + 
+  #     geom_boxplot(outlier.shape = NA)+labs(x = "Quintile number", y=y.name)
+  bplot
+  #ggsave("0111_Bread and cereals.png", scale=0.9)  
+  ggsave(file=paste("../outputs/", y.v, "_only consummers boxplot.png"), width = 23, height = 12, units = "cm", scale=0.9)
 }

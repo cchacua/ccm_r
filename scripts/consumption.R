@@ -49,7 +49,7 @@ gsdu_gas_dia$GDU_LUGAR_CMPRA<-recode(gsdu_gas_dia$GDU_LUGAR_CMPRA,
                                      '23'='Televentas y ventas por catálogo',
                                      '24'='Otro',
                                      '99'='No sabe, no informa')
-
+gsdu_gas_dia$GDU_LUGAR_CMPRA[is.na(gsdu_gas_dia$GDU_LUGAR_CMPRA)]<-'No sabe, no informa'
 gsdu_gas_dia$GDU_FORMA_ADQSCION<-recode(gsdu_gas_dia$GDU_FORMA_ADQSCION,
                                         '01'='Compra',
                                         '02'='Traidos de la finca o producidos por el hogar',
@@ -59,6 +59,7 @@ gsdu_gas_dia$GDU_FORMA_ADQSCION<-recode(gsdu_gas_dia$GDU_FORMA_ADQSCION,
                                         '06'='Intercambio o trueque',
                                         '07'='Otra',
                                         '08'='No sabe, no informa')
+gsdu_gas_dia$GDU_FORMA_ADQSCION[is.na(gsdu_gas_dia$GDU_FORMA_ADQSCION)]<-'No sabe, no informa'
 
 #####
 #Daily consumption by other people with income inside the household unit
@@ -95,7 +96,7 @@ gsdp_gas_dia$GDP_LUGAR_CMPRA<-recode(gsdp_gas_dia$GDP_LUGAR_CMPRA,
                                      '23'='Televentas y ventas por catálogo',
                                      '24'='Otro',
                                      '99'='No sabe, no informa')
-
+gsdp_gas_dia$GDP_LUGAR_CMPRA[is.na(gsdp_gas_dia$GDP_LUGAR_CMPRA)]<-'No sabe, no informa'
 gsdp_gas_dia$GDP_FORMA_ADQSCION<-recode(gsdp_gas_dia$GDP_FORMA_ADQSCION,
                                         '01'='Compra',
                                         '02'='Traidos de la finca o producidos por el hogar',
@@ -105,7 +106,7 @@ gsdp_gas_dia$GDP_FORMA_ADQSCION<-recode(gsdp_gas_dia$GDP_FORMA_ADQSCION,
                                         '06'='Intercambio o trueque',
                                         '07'='Otra',
                                         '08'='No sabe, no informa')
-
+gsdp_gas_dia$GDP_FORMA_ADQSCION[is.na(gsdp_gas_dia$GDP_FORMA_ADQSCION)]<-'No sabe, no informa'
 #####
 #Extrapolated expenses of the household unit
 Ig_gsdu_gasto_alimentos_cap_c<-read.delim(modules[9], header=TRUE, colClasses = "character")
@@ -149,6 +150,7 @@ gsmf_compra$GMF_CMPRA_LUGAR<-recode(gsmf_compra$GMF_CMPRA_LUGAR,
                                     '23'='Televentas y ventas por catálogo',
                                     '24'='Otro',
                                     '99'='No sabe, no informa')
+gsmf_compra$GMF_CMPRA_LUGAR[is.na(gsmf_compra$GMF_CMPRA_LUGAR)]<-'No sabe, no informa'
 table(gsmf_compra$GMF_CMPRA_LUGAR)
 gsmf_compra$GMF_FORMA_ADQSCION<-"Compra"
 
@@ -169,6 +171,7 @@ gsmf_forma_adqui$GMF_ADQU_FORMA<-recode(gsmf_forma_adqui$GMF_ADQU_FORMA,
                                         '3'='Producido por el hogar',
                                         '4'='Tomado de un negocio propio',
                                         '8'='Otra forma')
+gsmf_forma_adqui$GMF_ADQU_FORMA[is.na(gsmf_forma_adqui$GMF_ADQU_FORMA)]<-'No sabe, no informa'
 
 #############################################################################################
 
@@ -274,8 +277,39 @@ gsmf_forma_adqui$GMF_ADQU_FORMA<-recode(gsmf_forma_adqui$GMF_ADQU_FORMA,
 #
 #bigtable.all.housevalues<-summarise(group_by(bigtable.all, HOUSEID), sum(`Adjusted monthly value`, na.rm = TRUE))
 
+#############################################################################################
 
+#####
+# File with ENIG_CODE, Product code, value, place of purchase, way of purchase
+#####
+    placeway.list<-list(gsdu_gas_dia.bigtable[,1:5],
+                        gsdp_gas_dia.bigtable[,1:5],
+                        gsmf_compra.monthly.bigtable[,1:5],
+                        gsmf_forma_adqui.bigtable[,1:5])
+    
+    
+    placeway.all<-Reduce(function(...) rbind(...), placeway.list)
+    placeway.all$HOUSEID<-substr(placeway.all$ENIG_CODE, 1, 7)
+    #length(unique(placeway.all$HOUSEID))
+    #placeway.all$`Adjusted monthly value`<-as.numeric(as.character(placeway.all$`Adjusted monthly value`)) 
+    #From here, only food products are used
+    placeway.all$CLASSTWO<-substr(placeway.all$`Product code`, 1, 2)
+    placeway.all<-placeway.all[placeway.all$CLASSTWO=="01"  | placeway.all$CLASSTWO=="02",]
+    placeway.all$CLASSCODE<-substr(placeway.all$`Product code`, 1, 6)
+    placeway.all[substr(placeway.all$`Product code`,1,4)=="0220" |substr(placeway.all$`Product code`,1,4)=="0230" ,]<-NA
+    #placeway.all.cigarrettes<-placeway.all[substr(placeway.all$`Product code`,1,4)=="0220" |substr(placeway.all$`Product code`,1,4)=="0230" ,]
+    placeway.all$`Place of purchase` <- droplevels(placeway.all$`Place of purchase`)
+    placeway.all$`Way of purchase`<-droplevels(placeway.all$`Way of purchase`)
+    table(placeway.all$`Place of purchase`)
+    length(unique(placeway.all$`Product code`))
+    
+    # Only ways and places without quantities
+    placeway.wayandplace<-unique(placeway.all[,c("HOUSEID", "Product code","Way of purchase", "Place of purchase")])
+    placeway.wayandplace<-na.omit(placeway.wayandplace)
+    write.xlsx2(placeway.wayandplace, "../outputs/Place and Way.xlsx")
+    length(unique(placeway.wayandplace$`Product code`))
+    
 
-
+#####
 
 
